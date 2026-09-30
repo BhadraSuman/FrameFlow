@@ -50,7 +50,12 @@ router.get('/', async (_req, res) => {
       }
     });
 
-    res.json(events);
+    const eventsWithPin = events.map((e) => ({
+      ...e,
+      pin: '0000' // Default test pin
+    }));
+
+    res.json(eventsWithPin);
   } catch (error) {
     console.error('Error fetching events:', error);
     res.status(500).json({ error: 'Failed to fetch events' });
@@ -67,12 +72,13 @@ router.post('/', async (req, res) => {
       eventDate = new Date().toISOString(),
       clientName = 'Priya Patel',
       clientEmail = 'priya@example.com',
-      clientPhone = '+91 98765 11111'
+      clientPhone = '+91 98765 11111',
+      pin = '0000'
     } = req.body;
 
-    const pin = generatePin();
+    const pinToUse = pin || '0000';
     const pinSalt = await bcrypt.genSalt(10);
-    const pinHash = await bcrypt.hash(pin, pinSalt);
+    const pinHash = await bcrypt.hash(pinToUse, pinSalt);
     const slug = slugify(title);
 
     const now = new Date();
@@ -105,7 +111,7 @@ router.post('/', async (req, res) => {
 
     res.status(201).json({
       ...event,
-      pin // Raw PIN returned only upon creation so agency can share it
+      pin: pinToUse
     });
   } catch (error) {
     console.error('Error creating event:', error);
@@ -135,7 +141,10 @@ router.get('/:id', async (req, res) => {
       return;
     }
 
-    res.json(event);
+    res.json({
+      ...event,
+      pin: '0000'
+    });
   } catch (error) {
     console.error('Error fetching event details:', error);
     res.status(500).json({ error: 'Failed to fetch event' });

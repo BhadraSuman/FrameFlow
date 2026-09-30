@@ -312,6 +312,20 @@ export const ClientGallery: React.FC = () => {
             ))}
           </div>
 
+          {/* Test PIN Quick Fill */}
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={() => {
+                setPinDigits(['0', '0', '0', '0']);
+                verifyPin('0000');
+              }}
+              className="text-xs text-rose-400 hover:text-rose-300 font-medium bg-rose-950/40 hover:bg-rose-950/60 border border-rose-800/40 px-3 py-1.5 rounded-full transition inline-flex items-center space-x-1.5"
+            >
+              <span>⚡ Test Mode: Click to auto-fill 0000</span>
+            </button>
+          </div>
+
           {pinError && (
             <p className="text-xs text-rose-400 font-medium mt-3 animate-fadeIn">
               {pinError}
