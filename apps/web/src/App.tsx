@@ -14,14 +14,28 @@ export default function App() {
       <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-rose-500 selection:text-white">
         <Navbar onNewEventClick={() => setIsCreateModalOpen(true)} />
 
-        <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="flex-1 flex flex-col">
           <Routes>
-            <Route path="/" element={<AgencyDashboard />} />
-            <Route path="/events/:id" element={<EventStudio />} />
+            <Route
+              path="/"
+              element={
+                <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+                  <AgencyDashboard />
+                </main>
+              }
+            />
+            <Route
+              path="/events/:id"
+              element={
+                <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+                  <EventStudio />
+                </main>
+              }
+            />
             <Route path="/gallery/:slug" element={<ClientGallery />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </main>
+        </div>
 
         <CreateEventModal
           isOpen={isCreateModalOpen}

@@ -58,6 +58,11 @@ router.get('/files', (req, res) => {
     res.setHeader('Content-Type', 'image/png');
   }
 
+  if (req.query.download === 'true') {
+    const filename = (req.query.filename as string) || path.basename(safeKey);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+  }
+
   res.setHeader('Cache-Control', 'public, max-age=86400');
   fs.createReadStream(fullPath).pipe(res);
 });
