@@ -55,6 +55,7 @@ model Event {
   mediaItems          MediaItem[]
   selectionRounds     SelectionRound[]
   clientSessions      ClientSession[]
+  exportJobs          ExportJob[]
 
   @@index([userId])
   @@index([slug])
@@ -103,6 +104,7 @@ model SelectionRound {
 
   event          Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
   selections     Selection[]
+  exportJobs     ExportJob[]
 
   @@unique([eventId, roundNumber])
   @@map("selection_rounds")
@@ -135,4 +137,25 @@ model ClientSession {
 
   @@index([sessionTokenHash])
   @@map("client_sessions")
+}
+
+model ExportJob {
+  id             String         @id @default(uuid())
+  eventId        String
+  roundId        String
+  exportType     String         @default("ZIP_ORIGINALS")
+  status         String         @default("PENDING")
+  outputKey      String?
+  fileSizeBytes  BigInt?
+  errorMessage   String?
+  downloadUrl    String?
+  expiresAt      DateTime?
+  createdAt      DateTime       @default(now())
+  completedAt    DateTime?
+
+  event          Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  round          SelectionRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@map("export_jobs")
 }

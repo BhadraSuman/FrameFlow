@@ -69,7 +69,55 @@ export const EventStudio: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+  const [zipLoading, setZipLoading] = useState(false);
+  const [zipDownloadUrl, setZipDownloadUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const startZipExport = async () => {
+    if (!event) return;
+    setZipLoading(true);
+    try {
+      const res = await fetch(`/api/events/${event.id}/export/zip`, { method: 'POST' });
+      if (res.ok) {
+        const interval = setInterval(async () => {
+          const statusRes = await fetch(`/api/events/${event.id}/export/zip/status`);
+          if (statusRes.ok) {
+            const statusData = await statusRes.json();
+            if (statusData.status === 'COMPLETED' && statusData.downloadUrl) {
+              clearInterval(interval);
+              setZipLoading(false);
+              setZipDownloadUrl(statusData.downloadUrl);
+              window.open(statusData.downloadUrl, '_blank');
+            } else if (statusData.status === 'FAILED') {
+              clearInterval(interval);
+              setZipLoading(false);
+              alert(statusData.errorMessage || 'Failed to compile ZIP');
+            }
+          }
+        }, 2000);
+      } else {
+        setZipLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setZipLoading(false);
+    }
+  };
+
+  const copyLightroomQuery = async () => {
+    if (!event) return;
+    try {
+      const res = await fetch(`/api/events/${event.id}/export/lightroom`);
+      if (res.ok) {
+        const data = await res.json();
+        navigator.clipboard.writeText(data.query);
+        setCopiedKey('lightroom');
+        setTimeout(() => setCopiedKey(null), 2500);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const loadEvent = async () => {
     if (!id) return;
@@ -292,15 +340,66 @@ export const EventStudio: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Background ZIP export */}
+            {zipDownloadUrl ? (
+              <a
+                href={zipDownloadUrl}
+                download
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold shadow-lg shadow-emerald-900/40 transition flex items-center space-x-2"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download Ready ZIP</span>
+              </a>
+            ) : (
+              <button
+                onClick={startZipExport}
+                disabled={zipLoading}
+                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-lg shadow-emerald-900/40 transition flex items-center space-x-2 disabled:opacity-50"
+              >
+                {zipLoading ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Bundling Originals...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4" />
+                    <span>Download Originals (ZIP)</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            {/* CSV Filename List */}
             <a
               href={`/api/events/${event.id}/export/csv`}
               download
-              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold shadow-lg shadow-emerald-900/40 transition flex items-center space-x-2"
+              className="px-3.5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold border border-zinc-700 transition flex items-center space-x-1.5"
+              title="Download selected filenames as CSV"
             >
-              <Download className="w-4 h-4" />
-              <span>Download Selection CSV</span>
+              <Download className="w-3.5 h-3.5 text-zinc-400" />
+              <span>CSV</span>
             </a>
+
+            {/* Copy Lightroom Search Query */}
+            <button
+              onClick={copyLightroomQuery}
+              className="px-3.5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold border border-zinc-700 transition flex items-center space-x-1.5"
+              title="Copy comma-separated filenames for Adobe Lightroom or Capture One search bar"
+            >
+              {copiedKey === 'lightroom' ? (
+                <>
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-emerald-400">Query Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>Lightroom Query</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
       )}

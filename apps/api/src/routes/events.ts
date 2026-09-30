@@ -195,4 +195,125 @@ router.get('/:id/export/csv', async (req, res) => {
   }
 });
 
+// GET /api/events/:id/export/lightroom - Copyable search query for Adobe Lightroom / Capture One
+router.get('/:id/export/lightroom', async (req, res) => {
+  try {
+    const event = await prisma.event.findUnique({
+      where: { id: req.params.id },
+      include: {
+        selectionRounds: {
+          where: { roundNumber: 1 },
+          include: {
+            selections: {
+              include: { mediaItem: true }
+            }
+          }
+        }
+      }
+    });
+
+    if (!event) {
+      res.status(404).json({ error: 'Event not found' });
+      return;
+    }
+
+    const round = event.selectionRounds[0];
+    const selections = round?.selections || [];
+    const filenames = selections.map((s) => s.mediaItem.originalFilename);
+    const query = filenames.join(', ');
+
+    res.json({
+      query,
+      count: filenames.length,
+      filenames
+    });
+  } catch (error) {
+    console.error('Error getting Lightroom query:', error);
+    res.status(500).json({ error: 'Failed to generate Lightroom query' });
+  }
+});
+
+// POST /api/events/:id/export/zip - Start background ZIP generation
+router.post('/:id/export/zip', async (req, res) => {
+  try {
+    const event = await prisma.event.findUnique({
+      where: { id: req.params.id },
+      include: {
+        selectionRounds: {
+          where: { roundNumber: 1 },
+          include: {
+            selections: true
+          }
+        }
+      }
+    });
+
+    if (!event) {
+      res.status(404).json({ error: 'Event not found' });
+      return;
+    }
+
+    const round = event.selectionRounds[0];
+    if (!round || round.selections.length === 0) {
+      res.status(400).json({ error: 'No selections found to export' });
+      return;
+    }
+
+    // Create ExportJob record
+    const exportJob = await prisma.exportJob.create({
+      data: {
+        eventId: event.id,
+        roundId: round.id,
+        exportType: 'ZIP_ORIGINALS',
+        status: 'PENDING'
+      }
+    });
+
+    // Dispatch to Image Worker microservice
+    const workerUrl = process.env.WORKER_URL || 'http://localhost:4001';
+    fetch(`${workerUrl}/process-zip`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jobId: exportJob.id,
+        eventId: event.id
+      })
+    }).catch((err) => {
+      console.error(`[API] Failed to dispatch ZIP job to worker at ${workerUrl}:`, err);
+    });
+
+    res.status(202).json({
+      jobId: exportJob.id,
+      status: 'PENDING',
+      message: 'Background ZIP compilation started'
+    });
+  } catch (error) {
+    console.error('Error initiating ZIP export:', error);
+    res.status(500).json({ error: 'Failed to initiate ZIP export' });
+  }
+});
+
+// GET /api/events/:id/export/zip/status - Check ZIP compilation status
+router.get('/:id/export/zip/status', async (req, res) => {
+  try {
+    const latestJob = await prisma.exportJob.findFirst({
+      where: {
+        eventId: req.params.id,
+        exportType: 'ZIP_ORIGINALS'
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    if (!latestJob) {
+      res.json({ status: 'NONE' });
+      return;
+    }
+
+    res.json(latestJob);
+  } catch (error) {
+    console.error('Error checking ZIP status:', error);
+    res.status(500).json({ error: 'Failed to check ZIP status' });
+  }
+});
+
 export default router;

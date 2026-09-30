@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { Worker } from 'bullmq';
 import { ProcessImageJobPayload } from '@frameflow/shared';
 import { processImage } from './processor.js';
+import { processZipExport, ProcessZipJobPayload } from './zip-bundler.js';
 
 dotenv.config();
 
@@ -43,6 +44,25 @@ app.post('/process-job', async (req, res) => {
   // Execute processing asynchronously in worker background
   processImage(payload).catch((err) => {
     console.error(`[Worker] Async job failed for media ${payload.mediaId}:`, err);
+  });
+});
+
+// ZIP Export job execution endpoint
+app.post('/process-zip', async (req, res) => {
+  const payload = req.body as ProcessZipJobPayload;
+
+  if (!payload || !payload.jobId || !payload.eventId) {
+    res.status(400).json({ error: 'Missing required payload fields' });
+    return;
+  }
+
+  res.status(202).json({
+    message: 'ZIP export job accepted for processing',
+    jobId: payload.jobId
+  });
+
+  processZipExport(payload).catch((err) => {
+    console.error(`[Worker] Async ZIP export failed for job ${payload.jobId}:`, err);
   });
 });
 
