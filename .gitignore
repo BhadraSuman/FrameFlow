@@ -1,0 +1,26 @@
+# Node dependencies
+node_modules
+.pnpm-store
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist
+build
+.turbo
+
+# Storage & Temporary Files
+.storage
+uploads
+tmp
+*.log
+
+# Prisma generated
+packages/db/src/generated
+
+# OS files
+.DS_Store
+Thumbs.db

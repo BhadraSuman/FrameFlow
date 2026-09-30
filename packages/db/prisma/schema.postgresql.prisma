@@ -1,0 +1,257 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  STUDIO_OWNER
+  STUDIO_MEMBER
+  ADMIN
+}
+
+enum EventStatus {
+  DRAFT
+  ACTIVE
+  SELECTION_SUBMITTED
+  ARCHIVED
+  EXPIRED
+  PURGED
+}
+
+enum MediaStatus {
+  PENDING_UPLOAD
+  UPLOADED
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum RoundStatus {
+  OPEN
+  SUBMITTED
+  APPROVED
+  LOCKED
+}
+
+enum ExportType {
+  ZIP_ORIGINALS
+  CSV_FILENAMES
+  LIGHTROOM_TEXT
+}
+
+enum ExportStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ActorType {
+  AGENCY_USER
+  EVENT_CLIENT
+  SYSTEM_WORKER
+}
+
+model User {
+  id                String      @id @default(uuid()) @db.Uuid
+  email             String      @unique @db.VarChar(255)
+  passwordHash      String      @map("password_hash") @db.VarChar(255)
+  fullName          String      @map("full_name") @db.VarChar(150)
+  studioName        String      @map("studio_name") @db.VarChar(200)
+  phone             String?     @db.VarChar(20)
+  role              UserRole    @default(STUDIO_OWNER)
+  isActive          Boolean     @default(true) @map("is_active")
+  storageUsedBytes  BigInt      @default(0) @map("storage_used_bytes")
+  createdAt         DateTime    @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt         DateTime    @updatedAt @map("updated_at") @db.Timestamptz()
+
+  events            Event[]
+  auditLogs         AuditLog[]
+
+  @@map("users")
+}
+
+model Event {
+  id                  String        @id @default(uuid()) @db.Uuid
+  userId              String        @map("user_id") @db.Uuid
+  title               String        @db.VarChar(255)
+  slug                String        @unique @db.VarChar(100)
+  eventType           String        @map("event_type") @db.VarChar(100)
+  eventDate           DateTime      @map("event_date") @db.Date
+  clientName          String        @map("client_name") @db.VarChar(150)
+  clientEmail         String        @map("client_email") @db.VarChar(255)
+  clientPhone         String?       @map("client_phone") @db.VarChar(20)
+
+  pinHash             String        @map("pin_hash") @db.VarChar(255)
+  pinSalt             String        @map("pin_salt") @db.VarChar(64)
+
+  coverMediaId        String?       @map("cover_media_id") @db.Uuid
+  status              EventStatus   @default(DRAFT)
+
+  photoCount          Int           @default(0) @map("photo_count")
+  totalBytes          BigInt        @default(0) @map("total_bytes")
+
+  expiresAt           DateTime      @map("expires_at") @db.Timestamptz()
+  gracePeriodEndsAt   DateTime      @map("grace_period_ends_at") @db.Timestamptz()
+  purgedAt            DateTime?     @map("purged_at") @db.Timestamptz()
+
+  createdAt           DateTime      @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt           DateTime      @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user                User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  coverMedia          MediaItem?    @relation("EventCover", fields: [coverMediaId], references: [id], onDelete: SetNull)
+
+  mediaItems          MediaItem[]   @relation("EventMedia")
+  selectionRounds     SelectionRound[]
+  clientSessions      ClientSession[]
+  pinAttempts         PinAttempt[]
+  exportJobs          ExportJob[]
+  auditLogs           AuditLog[]
+
+  @@index([userId])
+  @@index([slug])
+  @@index([status, expiresAt])
+  @@index([clientEmail])
+  @@map("events")
+}
+
+model MediaItem {
+  id                String       @id @default(uuid()) @db.Uuid
+  eventId           String       @map("event_id") @db.Uuid
+  originalFilename  String       @map("original_filename") @db.VarChar(255)
+
+  originalKey       String       @map("original_key") @db.VarChar(500)
+  previewKey        String?      @map("preview_key") @db.VarChar(500)
+  thumbnailKey      String?      @map("thumbnail_key") @db.VarChar(500)
+
+  mimeType          String       @map("mime_type") @db.VarChar(100)
+  fileSizeBytes     BigInt       @map("file_size_bytes")
+  width             Int?
+  height            Int?
+
+  status            MediaStatus  @default(PENDING_UPLOAD)
+  checksumSha256    String?      @map("checksum_sha256") @db.VarChar(64)
+  sortOrder         Int          @default(0) @map("sort_order")
+
+  createdAt         DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt         DateTime     @updatedAt @map("updated_at") @db.Timestamptz()
+
+  event             Event        @relation("EventMedia", fields: [eventId], references: [id], onDelete: Cascade)
+  coveredEvents     Event[]      @relation("EventCover")
+  selections        Selection[]
+
+  @@index([eventId])
+  @@index([eventId, status])
+  @@index([eventId, sortOrder(sort: Asc)])
+  @@map("media_items")
+}
+
+model SelectionRound {
+  id             String        @id @default(uuid()) @db.Uuid
+  eventId        String        @map("event_id") @db.Uuid
+  roundNumber    Int           @default(1) @map("round_number")
+  status         RoundStatus   @default(OPEN)
+  maxSelections  Int?          @map("max_selections")
+  clientNotes    String?       @map("client_notes") @db.Text
+  submittedAt    DateTime?     @map("submitted_at") @db.Timestamptz()
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz()
+
+  event          Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  selections     Selection[]
+  exportJobs     ExportJob[]
+
+  @@unique([eventId, roundNumber])
+  @@index([eventId, status])
+  @@map("selection_rounds")
+}
+
+model Selection {
+  id             String         @id @default(uuid()) @db.Uuid
+  roundId        String         @map("round_id") @db.Uuid
+  mediaItemId    String         @map("media_item_id") @db.Uuid
+  clientComment  String?        @map("client_comment") @db.Text
+  selectedAt     DateTime       @default(now()) @map("selected_at") @db.Timestamptz()
+
+  round          SelectionRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  mediaItem      MediaItem      @relation(fields: [mediaItemId], references: [id], onDelete: Cascade)
+
+  @@unique([roundId, mediaItemId])
+  @@index([roundId])
+  @@index([mediaItemId])
+  @@map("selections")
+}
+
+model ClientSession {
+  id                String       @id @default(uuid()) @db.Uuid
+  eventId           String       @map("event_id") @db.Uuid
+  sessionTokenHash  String       @unique @map("session_token_hash") @db.VarChar(255)
+  ipAddress         String?      @map("ip_address") @db.VarChar(45)
+  userAgent         String?      @map("user_agent") @db.Text
+  expiresAt         DateTime     @map("expires_at") @db.Timestamptz()
+  createdAt         DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+
+  event             Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([sessionTokenHash])
+  @@index([expiresAt])
+  @@map("client_sessions")
+}
+
+model PinAttempt {
+  id              String       @id @default(uuid()) @db.Uuid
+  eventId         String       @map("event_id") @db.Uuid
+  ipAddress       String       @map("ip_address") @db.VarChar(45)
+  failedAttempts  Int          @default(1) @map("failed_attempts")
+  lockedUntil     DateTime?    @map("locked_until") @db.Timestamptz()
+  lastAttemptAt   DateTime     @default(now()) @map("last_attempt_at") @db.Timestamptz()
+
+  event           Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, ipAddress])
+  @@index([eventId, ipAddress])
+  @@map("pin_attempts")
+}
+
+model ExportJob {
+  id             String         @id @default(uuid()) @db.Uuid
+  eventId        String         @map("event_id") @db.Uuid
+  roundId        String         @map("round_id") @db.Uuid
+  exportType     ExportType     @map("export_type")
+  status         ExportStatus   @default(PENDING)
+  outputKey      String?        @map("output_key") @db.VarChar(500)
+  fileSizeBytes  BigInt?        @map("file_size_bytes")
+  errorMessage   String?        @map("error_message") @db.Text
+  expiresAt      DateTime?      @map("expires_at") @db.Timestamptz()
+  createdAt      DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+  completedAt    DateTime?      @map("completed_at") @db.Timestamptz()
+
+  event          Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  round          SelectionRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, status])
+  @@map("export_jobs")
+}
+
+model AuditLog {
+  id         String     @id @default(uuid()) @db.Uuid
+  eventId    String?    @map("event_id") @db.Uuid
+  userId     String?    @map("user_id") @db.Uuid
+  actorType  ActorType  @map("actor_type")
+  action     String     @db.VarChar(100)
+  ipAddress  String?    @map("ip_address") @db.VarChar(45)
+  metadata   Json       @default("{}")
+  createdAt  DateTime   @default(now()) @map("created_at") @db.Timestamptz()
+
+  event      Event?     @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([eventId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

@@ -1,0 +1,13 @@
+{
+  "name": "frameflow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -p \"[{name}]\" -n \"API,WORKER,WEB\" -c \"blue,green,magenta\" \"pnpm --filter @frameflow/api dev\" \"pnpm --filter @frameflow/image-worker dev\" \"pnpm --filter @frameflow/web dev\"",
+    "build": "pnpm -r run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "typescript": "^5.7.3"
+  }
+}
