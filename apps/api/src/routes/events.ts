@@ -142,4 +142,48 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// GET /api/events/:id/export/csv - Download selected photos filename list (CSV)
+router.get('/:id/export/csv', async (req, res) => {
+  try {
+    const event = await prisma.event.findUnique({
+      where: { id: req.params.id },
+      include: {
+        selectionRounds: {
+          where: { roundNumber: 1 },
+          include: {
+            selections: {
+              include: { mediaItem: true }
+            }
+          }
+        }
+      }
+    });
+
+    if (!event) {
+      res.status(404).send('Event not found');
+      return;
+    }
+
+    const round = event.selectionRounds[0];
+    const selections = round?.selections || [];
+
+    // Header
+    const rows = ['Filename,Size (Bytes),Dimensions,Selected Date,Client Comment'];
+    for (const sel of selections) {
+      const item = sel.mediaItem;
+      const dims = item.width && item.height ? `${item.width}x${item.height}` : 'N/A';
+      const comment = (sel.clientComment || '').replace(/"/g, '""');
+      rows.push(`"${item.originalFilename}",${item.fileSizeBytes},"${dims}","${sel.selectedAt.toISOString()}","${comment}"`);
+    }
+
+    const csvContent = rows.join('\r\n');
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="selection-${event.slug}.csv"`);
+    res.send(csvContent);
+  } catch (error) {
+    console.error('Error exporting CSV:', error);
+    res.status(500).send('Failed to generate CSV export');
+  }
+});
+
 export default router;
