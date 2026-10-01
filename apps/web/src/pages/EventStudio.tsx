@@ -24,6 +24,7 @@ import {
   ExternalLink,
   Clock
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface MediaItem {
   id: string;
@@ -74,6 +75,7 @@ interface UploadProgressItem {
 
 export const EventStudio: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { authFetch } = useAuth();
   const [event, setEvent] = useState<EventDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [uploadQueue, setUploadQueue] = useState<UploadProgressItem[]>([]);
@@ -92,7 +94,7 @@ export const EventStudio: React.FC = () => {
   const loadEvent = async () => {
     if (!id) return;
     try {
-      const res = await fetch(`/api/events/${id}`);
+      const res = await authFetch(`/api/events/${id}`);
       if (res.ok) {
         const data = await res.json();
         setEvent(data);
@@ -120,10 +122,10 @@ export const EventStudio: React.FC = () => {
     if (!event) return;
     setZipLoading(true);
     try {
-      const res = await fetch(`/api/events/${event.id}/export/zip`, { method: 'POST' });
+      const res = await authFetch(`/api/events/${event.id}/export/zip`, { method: 'POST' });
       if (res.ok) {
         const interval = setInterval(async () => {
-          const statusRes = await fetch(`/api/events/${event.id}/export/zip/status`);
+          const statusRes = await authFetch(`/api/events/${event.id}/export/zip/status`);
           if (statusRes.ok) {
             const statusData = await statusRes.json();
             if (statusData.status === 'COMPLETED' && statusData.downloadUrl) {
@@ -150,7 +152,7 @@ export const EventStudio: React.FC = () => {
   const copyLightroomQuery = async () => {
     if (!event) return;
     try {
-      const res = await fetch(`/api/events/${event.id}/export/lightroom`);
+      const res = await authFetch(`/api/events/${event.id}/export/lightroom`);
       if (res.ok) {
         const data = await res.json();
         navigator.clipboard.writeText(data.query);
@@ -183,7 +185,7 @@ export const EventStudio: React.FC = () => {
 
       try {
         // 1. Presign upload URL
-        const presignRes = await fetch('/api/uploads/presign', {
+        const presignRes = await authFetch('/api/uploads/presign', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -224,7 +226,7 @@ export const EventStudio: React.FC = () => {
         );
 
         // 3. Complete upload notification to API -> triggers Image Worker microservice
-        const completeRes = await fetch('/api/uploads/complete', {
+        const completeRes = await authFetch('/api/uploads/complete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

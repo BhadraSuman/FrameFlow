@@ -1,6 +1,8 @@
-import { Router } from 'express';
+import { Router, Request } from 'express';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { prisma } from '@frameflow/db';
+import { JWT_SECRET } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -21,6 +23,22 @@ async function getOrCreateDemoUser() {
   });
 }
 
+// Resolve authenticated user from Bearer JWT token or fallback to demo user
+async function resolveUser(req: Request) {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      const token = authHeader.split(' ')[1];
+      const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+      const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+      if (user && user.isActive) return user;
+    } catch {
+      // Invalid/expired token
+    }
+  }
+  return getOrCreateDemoUser();
+}
+
 // Generate random 4-digit PIN
 function generatePin(): string {
   return Math.floor(1000 + Math.random() * 9000).toString();
@@ -37,9 +55,9 @@ function slugify(text: string): string {
 }
 
 // GET /api/events - List all events
-router.get('/', async (_req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const user = await getOrCreateDemoUser();
+    const user = await resolveUser(req);
     const events = await prisma.event.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: 'desc' },
@@ -65,7 +83,7 @@ router.get('/', async (_req, res) => {
 // POST /api/events - Create new event
 router.post('/', async (req, res) => {
   try {
-    const user = await getOrCreateDemoUser();
+    const user = await resolveUser(req);
     const {
       title = 'Priya & Rohan Wedding',
       eventType = 'Wedding',

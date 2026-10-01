@@ -18,6 +18,7 @@ import {
   HardDrive
 } from 'lucide-react';
 import { CreateEventModal } from '../components/CreateEventModal';
+import { useAuth } from '../context/AuthContext';
 
 interface EventItem {
   id: string;
@@ -38,6 +39,7 @@ interface EventItem {
 }
 
 export const AgencyDashboard: React.FC = () => {
+  const { authFetch, user } = useAuth();
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,7 +49,7 @@ export const AgencyDashboard: React.FC = () => {
 
   const loadEvents = async () => {
     try {
-      const res = await fetch('/api/events');
+      const res = await authFetch('/api/events');
       if (res.ok) {
         const data = await res.json();
         setEvents(data);
@@ -111,7 +113,7 @@ export const AgencyDashboard: React.FC = () => {
           <div>
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold uppercase tracking-wider mb-2.5">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Royal Weddings & Events Studio</span>
+              <span>{user?.studioName || 'Royal Weddings & Events Studio'}</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
               Client Galleries & Proofing Portal

@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import authRouter from './routes/auth.js';
 import eventsRouter from './routes/events.js';
 import uploadsRouter from './routes/uploads.js';
 import galleriesRouter from './routes/galleries.js';
@@ -29,6 +30,7 @@ app.get('/health', (_req, res) => {
 });
 
 // Routes
+app.use('/api/auth', authRouter);
 app.use('/api/events', eventsRouter);
 app.use('/api/uploads', uploadsRouter);
 app.use('/api/galleries', galleriesRouter);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Sparkles, RefreshCw, KeyRound, Calendar, Mail, User, Heart, Briefcase, GraduationCap, PartyPopper } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 interface CreateEventModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   onEventCreated
 }) => {
   const navigate = useNavigate();
+  const { authFetch } = useAuth();
   const [title, setTitle] = useState('');
   const [eventType, setEventType] = useState('Wedding');
   const [eventDate, setEventDate] = useState(new Date().toISOString().split('T')[0]);
@@ -48,7 +50,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
     setError('');
 
     try {
-      const res = await fetch('/api/events', {
+      const res = await authFetch('/api/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
