@@ -72,25 +72,76 @@ docker compose up -d --build
 
 ---
 
-## ☁️ Connecting Cloudflare R2 (Zero Egress Storage)
+## ☁️ Setting Up AWS S3 (Learning & Testing Phase)
 
-To avoid consuming VPS disk space with client photo batches and to benefit from **zero egress bandwidth fees**:
+Using AWS S3 gives you hands-on experience with industry-standard cloud object storage, IAM user policies, and direct presigned browser uploads.
 
-1. Go to **Cloudflare Dashboard** -> **R2** -> **Create bucket** (name it e.g. `frameflow-prod`).
-2. Go to **Manage R2 API Tokens** -> **Create API Token** with **Object Read & Write** permissions.
-3. In your `.env` file on the VPS, set:
+### Step 1: Create an S3 Bucket in AWS Console
+1. Log in to the [AWS Management Console](https://console.aws.amazon.com/s3/).
+2. Click **Create bucket**.
+3. **Bucket name**: Choose a globally unique name (e.g. `frameflow-events-yourname`).
+4. **AWS Region**: Select **`ap-south-1` (Asia Pacific - Mumbai)** for lowest latency in India.
+5. **Block Public Access**: Keep all boxes checked (recommended for security). FrameFlow generates secure temporary presigned URLs to access photos, so public bucket access is **not** required!
+6. Click **Create bucket**.
+
+### Step 2: Configure Bucket CORS (Required for Direct Browser Uploads)
+Because high-resolution photos stream directly from the photographer's browser to S3 (bypassing server memory), S3 must permit browser `PUT` requests:
+1. In your bucket, go to the **Permissions** tab.
+2. Scroll down to **Cross-origin resource sharing (CORS)** and click **Edit**.
+3. Paste the following JSON configuration:
+```json
+[
+  {
+    "AllowedHeaders": ["*"],
+    "AllowedMethods": ["PUT", "GET", "HEAD"],
+    "AllowedOrigins": ["*"],
+    "ExposeHeaders": ["ETag"]
+  }
+]
+```
+4. Click **Save changes**.
+
+### Step 3: Create an IAM User with S3 Access
+1. Open the **AWS IAM Console** -> **Users** -> **Create user**.
+2. User name: `frameflow-s3-service`.
+3. Choose **Attach policies directly** -> Select `AmazonS3FullAccess` (or a restricted policy for your bucket).
+4. Click **Next** -> **Create user**.
+5. Click on the user -> **Security credentials** tab -> **Create access key** -> Select **Application running outside AWS**.
+6. Copy both the **Access Key ID** (`AKIA...`) and **Secret Access Key**.
+
+### Step 4: Configure Your `.env`
+In your `.env` file, set:
+```env
+STORAGE_DRIVER=s3
+AWS_REGION=ap-south-1
+AWS_ACCESS_KEY_ID=AKIA_YOUR_COPIED_KEY
+AWS_SECRET_ACCESS_KEY=YOUR_COPIED_SECRET
+AWS_BUCKET_NAME=frameflow-events-yourname
+```
+Restart your containers:
+```bash
+docker compose up -d
+```
+
+---
+
+## 🔄 Seamless Migration to Cloudflare R2 Later (Zero Egress Costs)
+
+When your client galleries attract high photo download volumes, AWS S3 charges ~$0.09/GB for data transfer out (egress). Cloudflare R2 has **$0 egress fees**, which eliminates bandwidth bills as you scale.
+
+Because FrameFlow was engineered with an abstracted `MediaStorageService`, migrating requires **zero code changes**:
+
+1. In the **Cloudflare Dashboard** -> **R2** -> Create a bucket (e.g. `frameflow-prod`).
+2. Generate an **R2 API Token** with Object Read & Write permissions.
+3. In your `.env` on the VPS, simply switch the driver:
    ```env
    STORAGE_DRIVER=r2
    R2_ACCOUNT_ID=your_cloudflare_account_id
    R2_ACCESS_KEY_ID=your_r2_access_key
    R2_SECRET_ACCESS_KEY=your_r2_secret_key
    R2_BUCKET_NAME=frameflow-prod
-   R2_PUBLIC_DOMAIN=https://media.yourstudio.com
    ```
-4. Restart the containers:
-   ```bash
-   docker compose up -d
-   ```
+4. Run `docker compose up -d`. The API and Image Worker instantly switch to R2 with zero downtime!
 
 ---
 

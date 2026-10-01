@@ -48,9 +48,16 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       WORKER_URL: http://image-worker:4001
-      # Storage configuration: set STORAGE_DRIVER=r2 to use Cloudflare R2, or local to store in volume
+      # Storage configuration: set STORAGE_DRIVER=s3 (AWS S3), r2 (Cloudflare R2), or local
       STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
       LOCAL_STORAGE_DIR: /app/.storage
+      # AWS S3 Settings
+      AWS_REGION: ${AWS_REGION:-ap-south-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME:-}
+      AWS_PUBLIC_DOMAIN: ${AWS_PUBLIC_DOMAIN:-}
+      # Cloudflare R2 Settings
       R2_ACCOUNT_ID: ${R2_ACCOUNT_ID:-}
       R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
       R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
@@ -77,6 +84,13 @@ services:
       REDIS_PORT: 6379
       STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
       LOCAL_STORAGE_DIR: /app/.storage
+      # AWS S3 Settings
+      AWS_REGION: ${AWS_REGION:-ap-south-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME:-}
+      AWS_PUBLIC_DOMAIN: ${AWS_PUBLIC_DOMAIN:-}
+      # Cloudflare R2 Settings
       R2_ACCOUNT_ID: ${R2_ACCOUNT_ID:-}
       R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
       R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
