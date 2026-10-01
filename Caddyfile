@@ -1,0 +1,12 @@
+{$DOMAIN:localhost} {
+    encode gzip zstd
+
+    # Route /api to API container
+    reverse_proxy /api/* api:4000 {
+        # Stream response directly (for ZIP downloads & raw media)
+        flush_interval -1
+    }
+
+    # Route all other traffic to Web Nginx container
+    reverse_proxy /* web:80
+}

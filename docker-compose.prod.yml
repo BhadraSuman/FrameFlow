@@ -1,0 +1,33 @@
+version: '3.8'
+
+# Production overlay with Caddy for automatic Let's Encrypt SSL
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  web:
+    ports: [] # Don't expose port 80 directly; let Caddy handle port 80 & 443
+
+  api:
+    ports: [] # Keep API private within internal docker network
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: frameflow_caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3 QUIC support
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+      - api
+
+volumes:
+  caddy_data:
+  caddy_config:
