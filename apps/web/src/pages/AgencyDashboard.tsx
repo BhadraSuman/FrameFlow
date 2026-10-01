@@ -133,59 +133,101 @@ export const AgencyDashboard: React.FC = () => {
         </div>
 
         {/* Studio Metrics Row */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-8 border-t border-zinc-800/80">
-          <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-4.5 hover:border-zinc-700/80 transition">
-            <div className="flex items-center justify-between text-zinc-400 text-xs font-medium">
-              <span>Active Events</span>
-              <FolderOpen className="w-4 h-4 text-rose-400" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-8 pt-8 border-t border-zinc-800/80">
+          {/* 1. Active Events */}
+          <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-5 hover:border-rose-500/40 hover:bg-zinc-950/90 transition-all duration-300 flex flex-col justify-between shadow-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                Active Events
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
+                <FolderOpen className="w-4 h-4" />
+              </div>
             </div>
-            <div className="flex items-baseline space-x-2 mt-1">
-              <p className="text-2xl font-bold text-white tracking-tight">{totalEvents}</p>
-              <span className="text-[11px] text-zinc-500">projects</span>
+            <div className="my-3">
+              <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-serif">
+                {totalEvents}
+              </span>
             </div>
-          </div>
-
-          <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-4.5 hover:border-zinc-700/80 transition">
-            <div className="flex items-center justify-between text-zinc-400 text-xs font-medium">
-              <span>Processed Photos</span>
-              <Camera className="w-4 h-4 text-amber-400" />
-            </div>
-            <div className="flex items-baseline space-x-2 mt-1">
-              <p className="text-2xl font-bold text-white tracking-tight">{totalPhotos}</p>
-              <span className="text-[11px] text-emerald-400">WebP 400 + 1600</span>
-            </div>
-          </div>
-
-          <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-4.5 hover:border-zinc-700/80 transition">
-            <div className="flex items-center justify-between text-zinc-400 text-xs font-medium">
-              <span>Selections Done</span>
-              <CheckCircle className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="flex items-baseline space-x-2 mt-1">
-              <p className="text-2xl font-bold text-white tracking-tight">{submittedSelections}</p>
-              <span className="text-[11px] text-zinc-400">ready for editing</span>
+            <div className="flex items-center space-x-1.5 text-xs text-zinc-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+              <span>Client proofing portals</span>
             </div>
           </div>
 
-          <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-4.5 hover:border-zinc-700/80 transition">
-            <div className="flex items-center justify-between text-zinc-400 text-xs font-medium">
-              <span>Storage Usage</span>
-              <HardDrive className="w-4 h-4 text-indigo-400" />
+          {/* 2. Processed Photos */}
+          <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-5 hover:border-amber-500/40 hover:bg-zinc-950/90 transition-all duration-300 flex flex-col justify-between shadow-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                Processed Photos
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
+                <Camera className="w-4 h-4" />
+              </div>
             </div>
-            <div className="flex items-baseline space-x-1.5 mt-1">
-              <p className="text-2xl font-bold text-white tracking-tight">
+            <div className="my-3">
+              <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-serif">
+                {totalPhotos}
+              </span>
+            </div>
+            <div className="flex items-center space-x-1.5 text-xs text-amber-400/90">
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
+              <span>WebP 400px + 1600px Ready</span>
+            </div>
+          </div>
+
+          {/* 3. Selections Done */}
+          <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-5 hover:border-emerald-500/40 hover:bg-zinc-950/90 transition-all duration-300 flex flex-col justify-between shadow-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                Selections Done
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <CheckCircle className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="my-3">
+              <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-serif">
+                {submittedSelections}
+              </span>
+            </div>
+            <div className="flex items-center space-x-1.5 text-xs text-emerald-400/90">
+              <CheckCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>Ready for album editing</span>
+            </div>
+          </div>
+
+          {/* 4. Storage Usage */}
+          <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-5 hover:border-indigo-500/40 hover:bg-zinc-950/90 transition-all duration-300 flex flex-col justify-between shadow-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                Storage Usage
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                <HardDrive className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="my-3 flex items-baseline space-x-1.5">
+              <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-serif">
                 {totalStorageMB < 1024
-                  ? `${totalStorageMB.toFixed(1)} MB`
-                  : `${(totalStorageMB / 1024).toFixed(2)} GB`}
-              </p>
-              <span className="text-[11px] text-zinc-500">/ 50 GB</span>
+                  ? totalStorageMB.toFixed(1)
+                  : (totalStorageMB / 1024).toFixed(2)}
+              </span>
+              <span className="text-sm font-semibold text-zinc-400">
+                {totalStorageMB < 1024 ? 'MB' : 'GB'}
+              </span>
             </div>
-            {/* Storage Progress Bar */}
-            <div className="w-full bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
-              <div
-                className="bg-rose-500 h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(100, Math.max(3, (totalStorageMB / 50000) * 100))}%` }}
-              />
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-[11px] text-zinc-400">
+                <span className="text-emerald-400 font-medium">Cloudflare R2</span>
+                <span className="font-mono text-zinc-500">50 GB quota</span>
+              </div>
+              <div className="w-full bg-zinc-800/80 h-1.5 rounded-full overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-indigo-500 via-rose-500 to-amber-500 h-full rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(100, Math.max(3, (totalStorageMB / 51200) * 100))}%` }}
+                />
+              </div>
             </div>
           </div>
         </div>
