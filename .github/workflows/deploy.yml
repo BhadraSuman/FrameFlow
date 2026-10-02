@@ -1,0 +1,91 @@
+name: FrameFlow CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  # --------------------------------------------------------------------------
+  # 1. CI Job: Typecheck & Build Monorepo
+  # --------------------------------------------------------------------------
+  build-and-test:
+    name: Build & Verify Monorepo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.29.3
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Database & Shared packages
+        run: |
+          pnpm --filter @frameflow/shared run build
+          pnpm --filter @frameflow/db run prisma:generate
+          pnpm --filter @frameflow/db run build
+
+      - name: Build API & Worker
+        run: |
+          pnpm --filter @frameflow/api run build
+          pnpm --filter @frameflow/image-worker run build
+
+      - name: Build Web Application (SPA)
+        run: pnpm --filter @frameflow/web run build
+
+  # --------------------------------------------------------------------------
+  # 2. CD Job: Deploy to AWS EC2 over SSH
+  # --------------------------------------------------------------------------
+  deploy-to-ec2:
+    name: Deploy to AWS EC2
+    needs: build-and-test
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER || 'ubuntu' }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
+          script: |
+            echo "🚀 [Deploy] Connected to EC2 instance. Navigating to project directory..."
+            cd ~/FrameFlow
+            
+            echo "📥 [Deploy] Pulling latest changes from Git..."
+            git pull origin ${{ github.ref_name }}
+            
+            echo "🐳 [Deploy] Rebuilding and restarting containers..."
+            docker compose up -d --build
+            
+            echo "🧹 [Deploy] Cleaning up dangling Docker images..."
+            docker image prune -f
+            
+            echo "✅ [Deploy] FrameFlow deployment successfully updated!"
+            docker compose ps
