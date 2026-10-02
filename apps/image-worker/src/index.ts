@@ -68,9 +68,15 @@ app.post('/process-zip', async (req, res) => {
   });
 });
 
-// BullMQ Worker (if REDIS_URL is provided)
+// BullMQ Worker (if REDIS_URL or REDIS_HOST is provided)
 let bullWorker: Worker | null = null;
-if (process.env.REDIS_URL) {
+const redisConnection = process.env.REDIS_URL
+  ? { url: process.env.REDIS_URL }
+  : process.env.REDIS_HOST
+  ? { host: process.env.REDIS_HOST, port: parseInt(process.env.REDIS_PORT || '6379', 10) }
+  : null;
+
+if (redisConnection) {
   try {
     bullWorker = new Worker(
       'image-processing',
@@ -79,9 +85,7 @@ if (process.env.REDIS_URL) {
         await processImage(job.data as ProcessImageJobPayload);
       },
       {
-        connection: {
-          url: process.env.REDIS_URL
-        },
+        connection: redisConnection,
         concurrency: 4
       }
     );

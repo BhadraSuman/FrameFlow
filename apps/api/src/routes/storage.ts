@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import fs from 'node:fs';
 import path from 'node:path';
+import { getStorageService } from '../storage.js';
 
 const router = Router();
 const baseDir = process.env.LOCAL_STORAGE_DIR || path.resolve(process.cwd(), '../../.storage');
@@ -35,7 +36,7 @@ router.put('/upload', (req, res) => {
 });
 
 // GET /api/storage/files?key=...
-router.get('/files', (req, res) => {
+router.get('/files', async (req, res) => {
   const key = req.query.key as string;
   if (!key) {
     res.status(400).send('Missing key parameter');
@@ -43,6 +44,21 @@ router.get('/files', (req, res) => {
   }
 
   const safeKey = key.replace(/^\/+/, '');
+  const driver = process.env.STORAGE_DRIVER || 'local';
+
+  if (driver === 's3' || driver === 'r2') {
+    try {
+      const storage = getStorageService();
+      const signedUrl = await storage.getSignedReadUrl(safeKey, 7200);
+      res.redirect(signedUrl);
+      return;
+    } catch (err) {
+      console.error('Error resolving signed cloud URL for key:', safeKey, err);
+      res.status(500).send('Failed to fetch file from storage');
+      return;
+    }
+  }
+
   const fullPath = path.join(baseDir, safeKey);
 
   if (!fs.existsSync(fullPath)) {

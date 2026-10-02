@@ -3,12 +3,16 @@ import { ProcessImageJobPayload } from '@frameflow/shared';
 
 let imageQueue: Queue | null = null;
 
-if (process.env.REDIS_URL) {
+const redisConnection = process.env.REDIS_URL
+  ? { url: process.env.REDIS_URL }
+  : process.env.REDIS_HOST
+  ? { host: process.env.REDIS_HOST, port: parseInt(process.env.REDIS_PORT || '6379', 10) }
+  : null;
+
+if (redisConnection) {
   try {
     imageQueue = new Queue('image-processing', {
-      connection: {
-        url: process.env.REDIS_URL
-      }
+      connection: redisConnection
     });
     console.log('[API] Connected to BullMQ Redis on queue: image-processing');
   } catch (err) {
