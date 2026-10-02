@@ -3,10 +3,10 @@
 
 services:
   web:
-    ports: [] # Don't expose port 80 directly; let Caddy handle port 80 & 443
+    ports: !override [] # Don't expose port 80 directly; let Caddy handle port 80 & 443
 
   api:
-    ports: [] # Keep API private within internal docker network
+    ports: !override [] # Keep API private within internal docker network
 
   caddy:
     image: caddy:2-alpine
