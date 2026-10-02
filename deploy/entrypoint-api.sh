@@ -5,7 +5,7 @@ echo "📦 [FrameFlow API] Syncing database schema to PostgreSQL..."
 max_retries=15
 count=0
 
-until pnpm --filter @frameflow/db exec prisma db push --schema=./packages/db/prisma/schema.postgresql.prisma --accept-data-loss; do
+until pnpm --filter @frameflow/db run prisma:push:pg; do
   count=$((count + 1))
   if [ "$count" -ge "$max_retries" ]; then
     echo "❌ [FrameFlow API] Failed to connect to database after $max_retries attempts. Exiting."

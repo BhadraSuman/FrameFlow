@@ -17,7 +17,7 @@
     "prisma:generate": "prisma generate",
     "prisma:generate:pg": "prisma generate --schema=prisma/schema.postgresql.prisma",
     "prisma:push": "prisma db push",
-    "prisma:push:pg": "prisma db push --schema=prisma/schema.postgresql.prisma"
+    "prisma:push:pg": "prisma db push --schema=prisma/schema.postgresql.prisma --accept-data-loss"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1"
