@@ -24,6 +24,7 @@ RUN cp packages/db/prisma/schema.postgresql.prisma packages/db/prisma/schema.pri
     pnpm --filter @frameflow/shared run build && \
     pnpm --filter @frameflow/db run build && \
     pnpm --filter @frameflow/api run build && \
+    sed -i 's/\r$//' ./deploy/entrypoint-api.sh && \
     chmod +x ./deploy/entrypoint-api.sh
 
 EXPOSE 4000
