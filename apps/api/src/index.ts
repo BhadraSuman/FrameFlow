@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'node:path';
 import dotenv from 'dotenv';
 import authRouter from './routes/auth.js';
 import eventsRouter from './routes/events.js';
@@ -8,6 +9,7 @@ import galleriesRouter from './routes/galleries.js';
 import storageRouter from './routes/storage.js';
 
 dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
 
 // Enable BigInt JSON serialization
 (BigInt.prototype as any).toJSON = function () {

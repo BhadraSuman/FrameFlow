@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'node:path';
 import dotenv from 'dotenv';
 import { Worker } from 'bullmq';
 import { ProcessImageJobPayload } from '@frameflow/shared';
@@ -6,6 +7,7 @@ import { processImage } from './processor.js';
 import { processZipExport, ProcessZipJobPayload } from './zip-bundler.js';
 
 dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
 
 // Enable BigInt JSON serialization
 (BigInt.prototype as any).toJSON = function () {
