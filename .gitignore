@@ -17,6 +17,7 @@ build
 uploads
 tmp
 *.log
+*.zip
 
 # Prisma generated
 packages/db/src/generated
