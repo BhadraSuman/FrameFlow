@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   Camera,
@@ -22,7 +22,9 @@ import {
   ChevronRight,
   HardDrive,
   ExternalLink,
-  Clock
+  Clock,
+  Trash2,
+  AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -75,6 +77,7 @@ interface UploadProgressItem {
 
 export const EventStudio: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { authFetch } = useAuth();
   const [event, setEvent] = useState<EventDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -88,6 +91,25 @@ export const EventStudio: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterMode, setFilterMode] = useState<'ALL' | 'SELECTED' | 'READY' | 'PROCESSING'>('ALL');
   const [gridCols, setGridCols] = useState<3 | 4 | 5>(4);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteEvent = async () => {
+    if (!event) return;
+    setIsDeleting(true);
+    try {
+      const res = await authFetch(`/api/events/${event.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to delete event');
+      }
+      navigate('/');
+    } catch (err: any) {
+      alert(err.message || 'Could not delete event');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -420,6 +442,15 @@ export const EventStudio: React.FC = () => {
             <MessageCircle className="w-4 h-4 text-emerald-200" />
             <span>WhatsApp Invite</span>
           </a>
+
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-red-950/30 hover:bg-red-900/50 border border-red-800/40 text-red-400 hover:text-red-300 text-xs font-semibold transition"
+            title="Delete this event and all uploaded photos"
+          >
+            <Trash2 className="w-4 h-4" />
+            <span>Delete Event</span>
+          </button>
         </div>
       </div>
 
@@ -1056,6 +1087,50 @@ export const EventStudio: React.FC = () => {
                   )}
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && event && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-zinc-900 border border-red-900/40 rounded-3xl p-6 max-w-md w-full shadow-2xl relative">
+            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center mb-4">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+
+            <h3 className="text-xl font-bold text-white font-serif mb-2">Delete Event Gallery?</h3>
+            <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
+              Are you sure you want to delete <strong className="text-white">"{event.title}"</strong>?
+              This will permanently delete this event, all client selections, and all <strong className="text-white">{event.mediaItems.length} photos</strong> from your S3 storage bucket.
+            </p>
+
+            <div className="flex items-center space-x-3 justify-end">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteEvent}
+                disabled={isDeleting}
+                className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-lg shadow-red-900/40 transition flex items-center space-x-2 disabled:opacity-50"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Delete Event & Files</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>

@@ -15,7 +15,9 @@ import {
   Share2,
   Sparkles,
   Users,
-  HardDrive
+  HardDrive,
+  Trash2,
+  AlertTriangle
 } from 'lucide-react';
 import { CreateEventModal } from '../components/CreateEventModal';
 import { useAuth } from '../context/AuthContext';
@@ -46,6 +48,25 @@ export const AgencyDashboard: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [eventToDelete, setEventToDelete] = useState<EventItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteEvent = async (event: EventItem) => {
+    setIsDeleting(true);
+    try {
+      const res = await authFetch(`/api/events/${event.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to delete event');
+      }
+      setEvents((prev) => prev.filter((e) => e.id !== event.id));
+      setEventToDelete(null);
+    } catch (err: any) {
+      alert(err.message || 'Could not delete event');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const loadEvents = async () => {
     try {
@@ -219,13 +240,13 @@ export const AgencyDashboard: React.FC = () => {
             </div>
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-[11px] text-zinc-400">
-                <span className="text-emerald-400 font-medium">Cloudflare R2</span>
-                <span className="font-mono text-zinc-500">50 GB quota</span>
+                <span className="text-emerald-400 font-medium">AWS S3 Active</span>
+                <span className="font-mono text-zinc-500">1 GB quota</span>
               </div>
               <div className="w-full bg-zinc-800/80 h-1.5 rounded-full overflow-hidden">
                 <div
                   className="bg-gradient-to-r from-indigo-500 via-rose-500 to-amber-500 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, Math.max(3, (totalStorageMB / 51200) * 100))}%` }}
+                  style={{ width: `${Math.min(100, Math.max(3, (totalStorageMB / 1024) * 100))}%` }}
                 />
               </div>
             </div>
@@ -450,11 +471,63 @@ export const AgencyDashboard: React.FC = () => {
                         <span>CSV</span>
                       </a>
                     )}
+
+                    <button
+                      onClick={() => setEventToDelete(event)}
+                      className="p-1.5 px-2.5 rounded-xl bg-red-950/30 hover:bg-red-900/50 border border-red-800/40 hover:border-red-700/60 text-red-400 hover:text-red-300 text-xs font-semibold transition flex items-center justify-center shrink-0"
+                      title="Delete event and all uploaded S3 photos"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {eventToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-zinc-900 border border-red-900/40 rounded-3xl p-6 max-w-md w-full shadow-2xl relative">
+            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center mb-4">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+
+            <h3 className="text-xl font-bold text-white font-serif mb-2">Delete Event Gallery?</h3>
+            <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
+              Are you sure you want to delete <strong className="text-white">"{eventToDelete.title}"</strong>?
+              This will permanently remove the event, client selections, and all uploaded photos from your S3 storage bucket.
+            </p>
+
+            <div className="flex items-center space-x-3 justify-end">
+              <button
+                onClick={() => setEventToDelete(null)}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeleteEvent(eventToDelete)}
+                disabled={isDeleting}
+                className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-lg shadow-red-900/40 transition flex items-center space-x-2 disabled:opacity-50"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Delete Event & Files</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

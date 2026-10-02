@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from '@frameflow/db';
 import { JWT_SECRET } from '../middleware/auth.js';
+import { getStorageService } from '../storage.js';
 
 const router = Router();
 
@@ -331,6 +332,69 @@ router.get('/:id/export/zip/status', async (req, res) => {
   } catch (error) {
     console.error('Error checking ZIP status:', error);
     res.status(500).json({ error: 'Failed to check ZIP status' });
+  }
+});
+
+// DELETE /api/events/:id - Delete event and its S3/storage files
+router.delete('/:id', async (req, res) => {
+  try {
+    const user = await resolveUser(req);
+    const event = await prisma.event.findFirst({
+      where: {
+        id: req.params.id,
+        userId: user.id
+      },
+      include: {
+        mediaItems: true,
+        exportJobs: true
+      }
+    });
+
+    if (!event) {
+      res.status(404).json({ error: 'Event not found or access denied' });
+      return;
+    }
+
+    // 1. Gather all S3 / storage keys to delete
+    const keysToDelete: string[] = [];
+    for (const item of event.mediaItems) {
+      if (item.originalKey) keysToDelete.push(item.originalKey);
+      if (item.previewKey) keysToDelete.push(item.previewKey);
+      if (item.thumbnailKey) keysToDelete.push(item.thumbnailKey);
+    }
+    for (const job of event.exportJobs) {
+      if (job.outputKey) keysToDelete.push(job.outputKey);
+    }
+
+    // 2. Clean up files from storage (S3 / R2 / Local)
+    if (keysToDelete.length > 0) {
+      try {
+        const storage = getStorageService();
+        await storage.deleteObjects(keysToDelete);
+        console.log(`[API] Deleted ${keysToDelete.length} files from storage for event ${event.id}`);
+      } catch (storageErr) {
+        console.warn(`[API] Non-fatal: Failed to delete some storage files for event ${event.id}:`, storageErr);
+      }
+    }
+
+    // 3. Clear coverMediaId to prevent foreign key cycle
+    await prisma.event.update({
+      where: { id: event.id },
+      data: { coverMediaId: null }
+    });
+
+    // 4. Delete the event (cascades to mediaItems, selectionRounds, selections, etc.)
+    await prisma.event.delete({
+      where: { id: event.id }
+    });
+
+    res.json({
+      success: true,
+      message: `Event "${event.title}" and its storage files were successfully deleted.`
+    });
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    res.status(500).json({ error: 'Failed to delete event' });
   }
 });
 
