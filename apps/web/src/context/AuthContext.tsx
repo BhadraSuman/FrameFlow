@@ -7,6 +7,11 @@ export interface User {
   studioName: string;
   phone?: string | null;
   role: string;
+  studioLogoUrl?: string | null;
+  brandColor?: string | null;
+  instagramHandle?: string | null;
+  websiteUrl?: string | null;
+  defaultWatermark?: boolean;
 }
 
 interface AuthContextType {
@@ -23,6 +28,7 @@ interface AuthContextType {
   }) => Promise<void>;
   loginAsDemo: () => Promise<void>;
   logout: () => void;
+  updateProfile: (data: Partial<User>) => Promise<User>;
   authFetch: (url: string, init?: RequestInit) => Promise<Response>;
 }
 
@@ -160,6 +166,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('frameflow_user');
   };
 
+  const updateProfile = async (data: Partial<User>): Promise<User> => {
+    const res = await authFetch('/api/auth/profile', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Failed to update profile');
+    }
+
+    const resData = await res.json();
+    const updatedUser = resData.user;
+    setUser(updatedUser);
+    localStorage.setItem('frameflow_user', JSON.stringify(updatedUser));
+    return updatedUser;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -170,6 +195,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         register,
         loginAsDemo,
         logout,
+        updateProfile,
         authFetch
       }}
     >

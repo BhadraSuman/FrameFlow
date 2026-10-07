@@ -53,6 +53,8 @@ interface EventDetail {
   pin?: string;
   status: string;
   photoCount: number;
+  maxSelections?: number | null;
+  enableWatermark?: boolean;
   mediaItems: MediaItem[];
   selectionRounds: Array<{
     id: string;
@@ -409,6 +411,22 @@ export const EventStudio: React.FC = () => {
               <span className="text-xs text-zinc-400">
                 Client: <strong className="text-zinc-200">{event.clientName}</strong>
               </span>
+              {event.maxSelections && (
+                <>
+                  <span className="text-zinc-600">•</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-rose-950/60 border border-rose-800/60 text-rose-300 font-medium">
+                    🎯 Max {event.maxSelections} Photos
+                  </span>
+                </>
+              )}
+              {event.enableWatermark && (
+                <>
+                  <span className="text-zinc-600">•</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300 font-medium">
+                    🛡️ Watermarked Proofs
+                  </span>
+                </>
+              )}
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-serif">
@@ -470,9 +488,18 @@ export const EventStudio: React.FC = () => {
             <span>Client Selections</span>
             <Heart className={`w-4 h-4 ${selectedCount > 0 ? 'text-rose-500 fill-current' : 'text-zinc-500'}`} />
           </div>
-          <p className="text-2xl font-bold text-rose-400 font-mono">{selectedCount}</p>
+          <div className="flex items-baseline space-x-1.5">
+            <p className="text-2xl font-bold text-rose-400 font-mono">{selectedCount}</p>
+            {event.maxSelections && (
+              <span className="text-xs text-zinc-400 font-mono">/ {event.maxSelections} limit</span>
+            )}
+          </div>
           <span className="text-[10px] text-zinc-500">
-            {isSubmitted ? 'Selection submitted' : 'Pending client pick'}
+            {isSubmitted
+              ? 'Selection submitted'
+              : event.maxSelections
+              ? `${Math.max(0, event.maxSelections - selectedCount)} slots remaining`
+              : 'Pending client pick'}
           </span>
         </div>
 

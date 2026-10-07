@@ -205,7 +205,12 @@ router.get('/me', requireAuth, async (req: AuthenticatedRequest, res: Response):
         fullName: user.fullName,
         studioName: user.studioName,
         phone: user.phone,
-        role: user.role
+        role: user.role,
+        studioLogoUrl: (user as any).studioLogoUrl || null,
+        brandColor: (user as any).brandColor || '#f43f5e',
+        instagramHandle: (user as any).instagramHandle || null,
+        websiteUrl: (user as any).websiteUrl || null,
+        defaultWatermark: Boolean((user as any).defaultWatermark)
       },
       stats: {
         totalEvents: user._count.events,
@@ -216,6 +221,60 @@ router.get('/me', requireAuth, async (req: AuthenticatedRequest, res: Response):
   } catch (error) {
     console.error('Fetch profile error:', error);
     res.status(500).json({ error: 'Failed to load user profile.' });
+  }
+});
+
+// PATCH /api/auth/profile - Update studio branding and settings
+router.patch('/profile', requireAuth, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const {
+      fullName,
+      studioName,
+      phone,
+      studioLogoUrl,
+      brandColor,
+      instagramHandle,
+      websiteUrl,
+      defaultWatermark
+    } = req.body;
+
+    const updatedUser = await prisma.user.update({
+      where: { id: req.user.id },
+      data: {
+        ...(fullName !== undefined && { fullName: fullName.trim() }),
+        ...(studioName !== undefined && { studioName: studioName.trim() }),
+        ...(phone !== undefined && { phone: phone ? phone.trim() : null }),
+        ...(studioLogoUrl !== undefined && { studioLogoUrl: studioLogoUrl ? studioLogoUrl.trim() : null }),
+        ...(brandColor !== undefined && { brandColor: brandColor.trim() }),
+        ...(instagramHandle !== undefined && { instagramHandle: instagramHandle ? instagramHandle.trim() : null }),
+        ...(websiteUrl !== undefined && { websiteUrl: websiteUrl ? websiteUrl.trim() : null }),
+        ...(defaultWatermark !== undefined && { defaultWatermark: Boolean(defaultWatermark) })
+      }
+    });
+
+    res.json({
+      user: {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        fullName: updatedUser.fullName,
+        studioName: updatedUser.studioName,
+        phone: updatedUser.phone,
+        role: updatedUser.role,
+        studioLogoUrl: (updatedUser as any).studioLogoUrl || null,
+        brandColor: (updatedUser as any).brandColor || '#f43f5e',
+        instagramHandle: (updatedUser as any).instagramHandle || null,
+        websiteUrl: (updatedUser as any).websiteUrl || null,
+        defaultWatermark: Boolean((updatedUser as any).defaultWatermark)
+      }
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ error: 'Failed to update studio profile.' });
   }
 });
 

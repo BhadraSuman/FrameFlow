@@ -17,6 +17,11 @@ model User {
   role              String      @default("STUDIO_OWNER")
   isActive          Boolean     @default(true)
   storageUsedBytes  BigInt      @default(0)
+  studioLogoUrl     String?
+  brandColor        String?     @default("#f43f5e")
+  instagramHandle   String?
+  websiteUrl        String?
+  defaultWatermark  Boolean     @default(false)
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
 
@@ -43,6 +48,9 @@ model Event {
 
   photoCount          Int           @default(0)
   totalBytes          BigInt        @default(0)
+
+  maxSelections       Int?
+  enableWatermark     Boolean       @default(false)
 
   expiresAt           DateTime
   gracePeriodEndsAt   DateTime

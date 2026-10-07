@@ -28,6 +28,14 @@ interface PhotoItem {
   fileSizeBytes: number;
 }
 
+interface StudioInfo {
+  studioName: string;
+  studioLogoUrl?: string | null;
+  brandColor?: string | null;
+  instagramHandle?: string | null;
+  websiteUrl?: string | null;
+}
+
 interface EventMeta {
   id: string;
   title: string;
@@ -37,6 +45,9 @@ interface EventMeta {
   clientName: string;
   status: string;
   roundStatus: string;
+  maxSelections?: number | null;
+  enableWatermark?: boolean;
+  studio?: StudioInfo;
 }
 
 export const ClientGallery: React.FC = () => {
@@ -50,6 +61,7 @@ export const ClientGallery: React.FC = () => {
   const [pinError, setPinError] = useState('');
   const [verifyingPin, setVerifyingPin] = useState(false);
   const [shake, setShake] = useState(false);
+  const [limitNotice, setLimitNotice] = useState<string | null>(null);
 
   // Gallery state
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
@@ -173,14 +185,25 @@ export const ClientGallery: React.FC = () => {
     }
   };
 
-  // Toggle selection with micro-interaction
+  // Toggle selection with micro-interaction and limit enforcement
   const toggleSelection = (photoId: string) => {
     if (submitted) return; // Locked after submission
-    setSelectedIds((prev) =>
-      prev.includes(photoId)
-        ? prev.filter((id) => id !== photoId)
-        : [...prev, photoId]
-    );
+
+    setSelectedIds((prev) => {
+      const isAlreadySelected = prev.includes(photoId);
+      if (isAlreadySelected) {
+        return prev.filter((id) => id !== photoId);
+      }
+
+      // Check max limit
+      if (eventMeta?.maxSelections && prev.length >= eventMeta.maxSelections) {
+        setLimitNotice(`Package limit reached! You can select up to ${eventMeta.maxSelections} photos.`);
+        setTimeout(() => setLimitNotice(null), 3500);
+        return prev;
+      }
+
+      return [...prev, photoId];
+    });
   };
 
   // Submit selections with Confetti celebration
@@ -280,8 +303,12 @@ export const ClientGallery: React.FC = () => {
         {/* Top Studio Watermark */}
         <div className="pt-10 text-center relative z-10">
           <div className="inline-flex items-center space-x-2 text-rose-400 text-xs font-semibold uppercase tracking-widest px-3.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 mb-3.5">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Royal Weddings Photography</span>
+            {eventMeta.studio?.studioLogoUrl ? (
+              <img src={eventMeta.studio.studioLogoUrl} alt="" className="w-4 h-4 rounded-full object-cover" />
+            ) : (
+              <Sparkles className="w-3.5 h-3.5" />
+            )}
+            <span>{eventMeta.studio?.studioName || 'Royal Weddings Photography'}</span>
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-2xl mx-auto font-serif">
             {eventMeta.title}
@@ -375,15 +402,23 @@ export const ClientGallery: React.FC = () => {
       <header className="border-b border-zinc-800/80 bg-zinc-950/85 backdrop-blur-md sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3 truncate mr-4">
-            <div className="w-10 h-10 rounded-2xl bg-rose-600/10 text-rose-400 border border-rose-500/20 flex items-center justify-center shrink-0">
-              <Camera className="w-5 h-5" />
-            </div>
+            {eventMeta.studio?.studioLogoUrl ? (
+              <img
+                src={eventMeta.studio.studioLogoUrl}
+                alt=""
+                className="w-10 h-10 rounded-2xl object-cover border border-zinc-700 shrink-0"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-2xl bg-rose-600/10 text-rose-400 border border-rose-500/20 flex items-center justify-center shrink-0">
+                <Camera className="w-5 h-5" />
+              </div>
+            )}
             <div className="truncate">
               <h2 className="text-base font-bold text-white truncate tracking-tight font-serif">
                 {eventMeta.title}
               </h2>
               <p className="text-[11px] text-zinc-400 truncate">
-                Curated for {eventMeta.clientName} • {photos.length} High-Res Photos
+                {eventMeta.studio?.studioName ? `${eventMeta.studio.studioName} • ` : ''}Curated for {eventMeta.clientName}
               </p>
             </div>
           </div>
@@ -450,31 +485,65 @@ export const ClientGallery: React.FC = () => {
             <div className="space-y-3">
               <div className="inline-flex items-center space-x-2 text-rose-400 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>{eventMeta.eventType} Collection</span>
+                <span>
+                  {eventMeta.studio?.studioName ? `${eventMeta.studio.studioName} • ` : ''}
+                  {eventMeta.eventType} Collection
+                </span>
               </div>
               <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-serif">
                 {eventMeta.title}
               </h1>
               <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
                 Welcome to your bespoke photo proofing gallery. Tap the heart icon on your favorite photos to curate your wedding album.
+                {eventMeta.maxSelections && (
+                  <span className="block mt-1 text-rose-400 font-semibold">
+                    Package allowance: {eventMeta.maxSelections} photos included.
+                  </span>
+                )}
               </p>
             </div>
 
             {/* Selection Progress Pill */}
             <div className="flex flex-col sm:items-end space-y-2 shrink-0 bg-zinc-950/70 border border-zinc-800/80 p-4 rounded-2xl backdrop-blur">
               <span className="text-[11px] uppercase tracking-wider font-semibold text-zinc-400">
-                Album Selection Progress
+                {eventMeta.maxSelections ? 'Package Quota Tracker' : 'Album Selection Progress'}
               </span>
               <div className="flex items-center space-x-2">
                 <span className="text-2xl font-bold font-mono text-rose-400">
                   {selectedIds.length}
                 </span>
-                <span className="text-xs text-zinc-400">/ {photos.length} photos</span>
+                <span className="text-xs text-zinc-400">
+                  / {eventMeta.maxSelections ? `${eventMeta.maxSelections} allowed` : `${photos.length} photos`}
+                </span>
               </div>
+              {eventMeta.maxSelections && (
+                <div className="text-[10px] text-zinc-400">
+                  {eventMeta.maxSelections - selectedIds.length > 0 ? (
+                    <span className="text-emerald-400 font-medium">
+                      {eventMeta.maxSelections - selectedIds.length} remaining
+                    </span>
+                  ) : eventMeta.maxSelections - selectedIds.length === 0 ? (
+                    <span className="text-amber-400 font-medium">Limit reached</span>
+                  ) : (
+                    <span className="text-rose-400 font-medium">
+                      {Math.abs(eventMeta.maxSelections - selectedIds.length)} over limit
+                    </span>
+                  )}
+                </div>
+              )}
               <div className="w-36 bg-zinc-800 h-2 rounded-full overflow-hidden">
                 <div
                   className="bg-gradient-to-r from-rose-600 to-rose-400 h-full rounded-full transition-all duration-300"
-                  style={{ width: `${Math.min(100, photos.length ? (selectedIds.length / photos.length) * 100 : 0)}%` }}
+                  style={{
+                    width: `${Math.min(
+                      100,
+                      eventMeta.maxSelections
+                        ? (selectedIds.length / eventMeta.maxSelections) * 100
+                        : photos.length
+                        ? (selectedIds.length / photos.length) * 100
+                        : 0
+                    )}%`
+                  }}
                 />
               </div>
             </div>
@@ -581,6 +650,13 @@ export const ClientGallery: React.FC = () => {
         </div>
       </main>
 
+      {/* Floating Limit Notice Toast */}
+      {limitNotice && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-rose-600 text-white px-5 py-2.5 rounded-full text-xs font-semibold shadow-2xl animate-bounce flex items-center space-x-2">
+          <span>⚠️ {limitNotice}</span>
+        </div>
+      )}
+
       {/* Floating Glass Action Dock (Bottom Bar) */}
       <div className="fixed bottom-6 inset-x-4 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-40">
         <div className="bg-zinc-900/90 border border-zinc-700/60 rounded-3xl p-3.5 px-6 shadow-2xl backdrop-blur-2xl flex items-center justify-between space-x-6 min-w-[320px] sm:min-w-[460px]">
@@ -590,11 +666,19 @@ export const ClientGallery: React.FC = () => {
                 {selectedIds.length}
               </span>
               <span className="text-xs sm:text-sm text-zinc-200 font-semibold">
-                of {photos.length} Photos Selected
+                {eventMeta.maxSelections
+                  ? `of ${eventMeta.maxSelections} Max Allowed`
+                  : `of ${photos.length} Photos Selected`}
               </span>
             </div>
             <p className="text-[10px] text-zinc-400">
-              {submitted ? 'Selection locked & confirmed' : 'Tap the heart icon to add or remove'}
+              {submitted
+                ? 'Selection locked & confirmed'
+                : eventMeta.maxSelections
+                ? selectedIds.length > eventMeta.maxSelections
+                  ? `Over limit by ${selectedIds.length - eventMeta.maxSelections} photos`
+                  : `${eventMeta.maxSelections - selectedIds.length} photo slots remaining`
+                : 'Tap the heart icon to add or remove'}
             </p>
           </div>
 
@@ -776,8 +860,8 @@ export const ClientGallery: React.FC = () => {
               </button>
               <button
                 onClick={handleSubmitSelections}
-                disabled={submitting}
-                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition shadow-lg shadow-rose-900/30 flex items-center space-x-1.5"
+                disabled={submitting || (eventMeta.maxSelections ? selectedIds.length > eventMeta.maxSelections : false)}
+                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition shadow-lg shadow-rose-900/30 flex items-center space-x-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{submitting ? 'Submitting...' : 'Confirm & Submit'}</span>
@@ -786,6 +870,47 @@ export const ClientGallery: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Studio Branding Footer */}
+      <footer className="border-t border-zinc-900 bg-zinc-950 py-10 px-4 text-center mt-auto">
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center space-y-3">
+          <div className="flex items-center space-x-2 text-sm font-semibold text-zinc-300">
+            {eventMeta.studio?.studioLogoUrl ? (
+              <img src={eventMeta.studio.studioLogoUrl} alt="" className="w-5 h-5 rounded-full object-cover" />
+            ) : (
+              <Camera className="w-4 h-4 text-rose-500" />
+            )}
+            <span>{eventMeta.studio?.studioName || 'Royal Weddings Photography'}</span>
+          </div>
+
+          <div className="flex items-center space-x-4 text-xs text-zinc-400">
+            {eventMeta.studio?.instagramHandle && (
+              <a
+                href={`https://instagram.com/${eventMeta.studio.instagramHandle.replace('@', '')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-rose-400 transition"
+              >
+                @{eventMeta.studio.instagramHandle.replace('@', '')}
+              </a>
+            )}
+            {eventMeta.studio?.websiteUrl && (
+              <a
+                href={eventMeta.studio.websiteUrl.startsWith('http') ? eventMeta.studio.websiteUrl : `https://${eventMeta.studio.websiteUrl}`}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-rose-400 transition"
+              >
+                Visit Website
+              </a>
+            )}
+          </div>
+
+          <p className="text-[11px] text-zinc-400">
+            Private Client Selection Gallery • Powered by FrameFlow
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };

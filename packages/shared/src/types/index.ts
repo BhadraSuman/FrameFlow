@@ -37,6 +37,28 @@ export interface MediaItemDTO {
   createdAt: string;
 }
 
+export interface StudioBrandingDTO {
+  studioName: string;
+  studioLogoUrl?: string | null;
+  brandColor?: string | null;
+  instagramHandle?: string | null;
+  websiteUrl?: string | null;
+}
+
+export interface UserDTO {
+  id: string;
+  email: string;
+  fullName: string;
+  studioName: string;
+  phone?: string | null;
+  role: UserRole;
+  studioLogoUrl?: string | null;
+  brandColor?: string | null;
+  instagramHandle?: string | null;
+  websiteUrl?: string | null;
+  defaultWatermark?: boolean;
+}
+
 export interface EventDTO {
   id: string;
   title: string;
@@ -51,6 +73,8 @@ export interface EventDTO {
   status: EventStatus;
   photoCount: number;
   totalBytes: number;
+  maxSelections?: number | null;
+  enableWatermark?: boolean;
   expiresAt: string;
   gracePeriodEndsAt: string;
 }
@@ -64,9 +88,12 @@ export interface ClientGalleryDTO {
   clientName: string;
   status: EventStatus;
   photoCount: number;
+  maxSelections?: number | null;
+  enableWatermark?: boolean;
   requiresPin: boolean;
   isUnlocked: boolean;
   roundStatus: RoundStatus;
+  studio?: StudioBrandingDTO;
   media: MediaItemDTO[];
   selectedMediaIds: string[];
 }

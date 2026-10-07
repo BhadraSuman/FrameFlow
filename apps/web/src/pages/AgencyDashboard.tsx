@@ -17,9 +17,11 @@ import {
   Users,
   HardDrive,
   Trash2,
-  AlertTriangle
+  AlertTriangle,
+  Settings
 } from 'lucide-react';
 import { CreateEventModal } from '../components/CreateEventModal';
+import { StudioSettingsModal } from '../components/StudioSettingsModal';
 import { useAuth } from '../context/AuthContext';
 
 interface EventItem {
@@ -47,6 +49,7 @@ export const AgencyDashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [eventToDelete, setEventToDelete] = useState<EventItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -144,13 +147,22 @@ export const AgencyDashboard: React.FC = () => {
             </p>
           </div>
 
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="self-start lg:self-auto flex items-center space-x-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 via-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-semibold text-sm shadow-xl shadow-rose-900/40 transition hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <Plus className="w-4 h-4 stroke-[3]" />
-            <span>Create New Event</span>
-          </button>
+          <div className="flex items-center space-x-3 self-start lg:self-auto">
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="flex items-center space-x-2 px-4 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 text-xs font-semibold transition"
+            >
+              <Settings className="w-4 h-4 text-zinc-400" />
+              <span>Studio Branding</span>
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center space-x-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 via-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-semibold text-sm shadow-xl shadow-rose-900/40 transition hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <Plus className="w-4 h-4 stroke-[3]" />
+              <span>Create New Event</span>
+            </button>
+          </div>
         </div>
 
         {/* Studio Metrics Row */}
@@ -538,6 +550,12 @@ export const AgencyDashboard: React.FC = () => {
         onEventCreated={(newEvent) => {
           setEvents((prev) => [newEvent, ...prev]);
         }}
+      />
+
+      {/* Studio Settings & White-Label Modal */}
+      <StudioSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
       />
     </div>
   );

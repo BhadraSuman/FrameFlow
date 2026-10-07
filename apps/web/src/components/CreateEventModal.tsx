@@ -15,13 +15,15 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   onEventCreated
 }) => {
   const navigate = useNavigate();
-  const { authFetch } = useAuth();
+  const { authFetch, user } = useAuth();
   const [title, setTitle] = useState('');
   const [eventType, setEventType] = useState('Wedding');
   const [eventDate, setEventDate] = useState(new Date().toISOString().split('T')[0]);
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
   const [pin, setPin] = useState('0000');
+  const [maxSelections, setMaxSelections] = useState('');
+  const [enableWatermark, setEnableWatermark] = useState(Boolean(user?.defaultWatermark));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -59,7 +61,9 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
           eventDate,
           clientName,
           clientEmail,
-          pin
+          pin,
+          maxSelections: maxSelections ? parseInt(maxSelections, 10) : null,
+          enableWatermark
         })
       });
 
@@ -232,6 +236,44 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                     <RefreshCw className="w-4 h-4" />
                   </button>
                 </div>
+              </div>
+            </div>
+
+            {/* Selection Limits & Watermarking Controls */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+              <div>
+                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
+                  Max Photos to Select <span className="text-zinc-500 font-normal lowercase">(optional)</span>
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  placeholder="e.g. 50 (empty for unlimited)"
+                  value={maxSelections}
+                  onChange={(e) => setMaxSelections(e.target.value)}
+                  className="w-full bg-zinc-950 border border-zinc-800 focus:border-rose-500 rounded-xl px-3.5 py-2 text-sm text-white placeholder-zinc-600 outline-none transition"
+                />
+                <p className="text-[11px] text-zinc-500 mt-1">
+                  Clients will see a real-time selection quota tracker.
+                </p>
+              </div>
+
+              <div className="flex flex-col justify-start">
+                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
+                  Proofing Watermark
+                </label>
+                <label className="flex items-center space-x-3 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 rounded-xl px-3.5 py-2.5 cursor-pointer transition">
+                  <input
+                    type="checkbox"
+                    checked={enableWatermark}
+                    onChange={(e) => setEnableWatermark(e.target.checked)}
+                    className="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 bg-zinc-900 border-zinc-700 cursor-pointer"
+                  />
+                  <div className="text-xs">
+                    <span className="font-semibold text-zinc-200 block">Apply Studio Watermark</span>
+                    <span className="text-[11px] text-zinc-500">Watermark 1600px preview images</span>
+                  </div>
+                </label>
               </div>
             </div>
 

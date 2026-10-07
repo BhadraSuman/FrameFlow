@@ -92,8 +92,13 @@ router.post('/', async (req, res) => {
       clientName = 'Priya Patel',
       clientEmail = 'priya@example.com',
       clientPhone = '+91 98765 11111',
-      pin = '0000'
+      pin = '0000',
+      maxSelections = null,
+      enableWatermark = false
     } = req.body;
+
+    const parsedMaxSelections = maxSelections ? parseInt(maxSelections, 10) : null;
+    const isWatermarkEnabled = Boolean(enableWatermark ?? (user as any).defaultWatermark ?? false);
 
     const pinToUse = pin || '0000';
     const pinSalt = await bcrypt.genSalt(10);
@@ -117,12 +122,15 @@ router.post('/', async (req, res) => {
         pinHash,
         pinSalt,
         status: 'ACTIVE',
+        maxSelections: parsedMaxSelections,
+        enableWatermark: isWatermarkEnabled,
         expiresAt,
         gracePeriodEndsAt,
         selectionRounds: {
           create: {
             roundNumber: 1,
-            status: 'OPEN'
+            status: 'OPEN',
+            maxSelections: parsedMaxSelections
           }
         }
       }
@@ -144,6 +152,15 @@ router.get('/:id', async (req, res) => {
     const event = await prisma.event.findUnique({
       where: { id: req.params.id },
       include: {
+        user: {
+          select: {
+            studioName: true,
+            studioLogoUrl: true,
+            brandColor: true,
+            instagramHandle: true,
+            websiteUrl: true
+          }
+        },
         mediaItems: {
           orderBy: { createdAt: 'desc' }
         },
@@ -167,6 +184,53 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     console.error('Error fetching event details:', error);
     res.status(500).json({ error: 'Failed to fetch event' });
+  }
+});
+
+// PATCH /api/events/:id - Update event settings (maxSelections, enableWatermark, title, etc.)
+router.patch('/:id', async (req, res) => {
+  try {
+    const {
+      title,
+      eventType,
+      eventDate,
+      clientName,
+      clientEmail,
+      clientPhone,
+      maxSelections,
+      enableWatermark,
+      status
+    } = req.body;
+
+    const parsedMaxSelections = maxSelections !== undefined ? (maxSelections ? parseInt(maxSelections, 10) : null) : undefined;
+
+    const event = await prisma.event.update({
+      where: { id: req.params.id },
+      data: {
+        ...(title !== undefined && { title }),
+        ...(eventType !== undefined && { eventType }),
+        ...(eventDate !== undefined && { eventDate: new Date(eventDate) }),
+        ...(clientName !== undefined && { clientName }),
+        ...(clientEmail !== undefined && { clientEmail }),
+        ...(clientPhone !== undefined && { clientPhone }),
+        ...(parsedMaxSelections !== undefined && { maxSelections: parsedMaxSelections }),
+        ...(enableWatermark !== undefined && { enableWatermark: Boolean(enableWatermark) }),
+        ...(status !== undefined && { status })
+      }
+    });
+
+    // Keep round 1 maxSelections synchronized
+    if (parsedMaxSelections !== undefined) {
+      await prisma.selectionRound.updateMany({
+        where: { eventId: event.id, roundNumber: 1 },
+        data: { maxSelections: parsedMaxSelections }
+      });
+    }
+
+    res.json(event);
+  } catch (error) {
+    console.error('Error updating event:', error);
+    res.status(500).json({ error: 'Failed to update event' });
   }
 });
 

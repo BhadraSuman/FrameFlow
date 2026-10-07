@@ -66,6 +66,11 @@ model User {
   role              UserRole    @default(STUDIO_OWNER)
   isActive          Boolean     @default(true) @map("is_active")
   storageUsedBytes  BigInt      @default(0) @map("storage_used_bytes")
+  studioLogoUrl     String?     @map("studio_logo_url") @db.VarChar(500)
+  brandColor        String?     @default("#f43f5e") @map("brand_color") @db.VarChar(50)
+  instagramHandle   String?     @map("instagram_handle") @db.VarChar(100)
+  websiteUrl        String?     @map("website_url") @db.VarChar(255)
+  defaultWatermark  Boolean     @default(false) @map("default_watermark")
   createdAt         DateTime    @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt         DateTime    @updatedAt @map("updated_at") @db.Timestamptz()
 
@@ -94,6 +99,9 @@ model Event {
 
   photoCount          Int           @default(0) @map("photo_count")
   totalBytes          BigInt        @default(0) @map("total_bytes")
+
+  maxSelections       Int?          @map("max_selections")
+  enableWatermark     Boolean       @default(false) @map("enable_watermark")
 
   expiresAt           DateTime      @map("expires_at") @db.Timestamptz()
   gracePeriodEndsAt   DateTime      @map("grace_period_ends_at") @db.Timestamptz()

@@ -20,7 +20,18 @@ router.get('/:slug', async (req, res) => {
         clientName: true,
         status: true,
         photoCount: true,
-        coverMediaId: true
+        coverMediaId: true,
+        maxSelections: true,
+        enableWatermark: true,
+        user: {
+          select: {
+            studioName: true,
+            studioLogoUrl: true,
+            brandColor: true,
+            instagramHandle: true,
+            websiteUrl: true
+          }
+        }
       }
     });
 
@@ -31,6 +42,7 @@ router.get('/:slug', async (req, res) => {
 
     res.json({
       ...event,
+      studio: event.user,
       requiresPin: true
     });
   } catch (error) {
@@ -95,6 +107,15 @@ router.get('/:slug/photos', async (req, res) => {
     const event = await prisma.event.findUnique({
       where: { slug: req.params.slug },
       include: {
+        user: {
+          select: {
+            studioName: true,
+            studioLogoUrl: true,
+            brandColor: true,
+            instagramHandle: true,
+            websiteUrl: true
+          }
+        },
         mediaItems: {
           orderBy: { sortOrder: 'asc' }
         },
@@ -154,7 +175,10 @@ router.get('/:slug/photos', async (req, res) => {
         eventDate: event.eventDate.toISOString(),
         clientName: event.clientName,
         status: event.status,
-        roundStatus: round1?.status || 'OPEN'
+        maxSelections: event.maxSelections,
+        enableWatermark: event.enableWatermark,
+        roundStatus: round1?.status || 'OPEN',
+        studio: event.user
       },
       photos: photosWithUrls,
       selectedMediaIds
@@ -183,13 +207,23 @@ router.post('/:slug/selections', async (req, res) => {
       return;
     }
 
+    // Check max selections constraint if configured
+    const effectiveLimit = event.maxSelections ?? event.selectionRounds[0]?.maxSelections;
+    if (effectiveLimit && selectedMediaIds.length > effectiveLimit) {
+      res.status(400).json({
+        error: `Selection limit exceeded. Maximum allowed: ${effectiveLimit} photos, but you have selected ${selectedMediaIds.length}.`
+      });
+      return;
+    }
+
     let round = event.selectionRounds[0];
     if (!round) {
       round = await prisma.selectionRound.create({
         data: {
           eventId: event.id,
           roundNumber: 1,
-          status: 'OPEN'
+          status: 'OPEN',
+          maxSelections: event.maxSelections
         }
       });
     }
