@@ -1,11 +1,14 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
+import crypto from 'node:crypto';
+import { OAuth2Client } from 'google-auth-library';
 import { prisma } from '@frameflow/db';
 import { signToken, requireAuth, AuthenticatedRequest } from '../middleware/auth.js';
 
 const router = Router();
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID || '');
 
-// Helper to seed/ensure default demo user exists
+// Helper to seed/ensure default demo user exists (fallback)
 async function getOrCreateDefaultDemoUser() {
   let user = await prisma.user.findFirst({
     where: { email: 'photographer@frameflow.test' }
@@ -139,10 +142,119 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// POST /api/auth/demo - 1-Click Fast Demo Login for instant testing
+// POST /api/auth/demo - 1-Click Isolated Demo Login with 24h auto-expiry
 router.post('/demo', async (_req: Request, res: Response): Promise<void> => {
   try {
-    const user = await getOrCreateDefaultDemoUser();
+    const demoSuffix = crypto.randomBytes(3).toString('hex');
+    const demoEmail = `demo_${demoSuffix}@frameflow.test`;
+    const passwordHash = await bcrypt.hash(`demo_${demoSuffix}`, 10);
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // Exactly 24 hours from creation
+
+    const demoUser = await prisma.user.create({
+      data: {
+        email: demoEmail,
+        passwordHash,
+        fullName: `Guest Photographer`,
+        studioName: `Demo Studio #${demoSuffix.toUpperCase()}`,
+        phone: null,
+        role: 'STUDIO_OWNER',
+        isDemo: true,
+        expiresAt
+      }
+    });
+
+    const token = signToken(demoUser);
+
+    res.json({
+      token,
+      user: {
+        id: demoUser.id,
+        email: demoUser.email,
+        fullName: demoUser.fullName,
+        studioName: demoUser.studioName,
+        phone: demoUser.phone,
+        role: demoUser.role,
+        isDemo: true,
+        expiresAt: demoUser.expiresAt?.toISOString()
+      }
+    });
+  } catch (error) {
+    console.error('Demo login error:', error);
+    res.status(500).json({ error: 'Failed to create isolated demo studio.' });
+  }
+});
+
+// POST /api/auth/google - Sign In / Register with Google OAuth (ID token or access token)
+router.post('/google', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { credential, accessToken } = req.body;
+
+    if (!credential && !accessToken) {
+      res.status(400).json({ error: 'Missing Google authentication credential or token.' });
+      return;
+    }
+
+    let email: string | undefined;
+    let name: string | undefined;
+
+    if (credential) {
+      // 1. Verify Google JWT ID Token
+      const ticket = await googleClient.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID || undefined
+      });
+      const payload = ticket.getPayload();
+      if (!payload || !payload.email) {
+        res.status(401).json({ error: 'Invalid Google credential token.' });
+        return;
+      }
+      email = payload.email.toLowerCase().trim();
+      name = payload.name || payload.given_name || 'Photographer';
+    } else if (accessToken) {
+      // 2. Fetch Google User Profile using OAuth Access Token
+      const userinfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      if (!userinfoRes.ok) {
+        res.status(401).json({ error: 'Failed to retrieve Google profile from access token.' });
+        return;
+      }
+      const profile = (await userinfoRes.json()) as any;
+      if (!profile?.email) {
+        res.status(401).json({ error: 'Google account has no email address.' });
+        return;
+      }
+      email = profile.email.toLowerCase().trim();
+      name = profile.name || 'Photographer';
+    }
+
+    if (!email) {
+      res.status(400).json({ error: 'No email found from Google identity.' });
+      return;
+    }
+
+    // Find existing user or create a new studio account
+    let user = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (!user) {
+      const generatedPassword = crypto.randomBytes(16).toString('hex');
+      const passwordHash = await bcrypt.hash(generatedPassword, 10);
+      const studioName = `${name}'s Photography`;
+
+      user = await prisma.user.create({
+        data: {
+          email,
+          passwordHash,
+          fullName: name || 'Studio Owner',
+          studioName,
+          role: 'STUDIO_OWNER',
+          isDemo: false
+        }
+      });
+    }
+
     const token = signToken(user);
 
     res.json({
@@ -153,12 +265,17 @@ router.post('/demo', async (_req: Request, res: Response): Promise<void> => {
         fullName: user.fullName,
         studioName: user.studioName,
         phone: user.phone,
-        role: user.role
+        role: user.role,
+        studioLogoUrl: (user as any).studioLogoUrl || null,
+        brandColor: (user as any).brandColor || '#f43f5e',
+        instagramHandle: (user as any).instagramHandle || null,
+        websiteUrl: (user as any).websiteUrl || null,
+        defaultWatermark: Boolean((user as any).defaultWatermark)
       }
     });
   } catch (error) {
-    console.error('Demo login error:', error);
-    res.status(500).json({ error: 'Failed to log in as demo studio.' });
+    console.error('Google sign-in error:', error);
+    res.status(500).json({ error: 'Google authentication failed. Please try again.' });
   }
 });
 
@@ -210,7 +327,9 @@ router.get('/me', requireAuth, async (req: AuthenticatedRequest, res: Response):
         brandColor: (user as any).brandColor || '#f43f5e',
         instagramHandle: (user as any).instagramHandle || null,
         websiteUrl: (user as any).websiteUrl || null,
-        defaultWatermark: Boolean((user as any).defaultWatermark)
+        defaultWatermark: Boolean((user as any).defaultWatermark),
+        isDemo: Boolean((user as any).isDemo),
+        expiresAt: (user as any).expiresAt ? (user as any).expiresAt.toISOString() : null
       },
       stats: {
         totalEvents: user._count.events,

@@ -71,6 +71,8 @@ model User {
   instagramHandle   String?     @map("instagram_handle") @db.VarChar(100)
   websiteUrl        String?     @map("website_url") @db.VarChar(255)
   defaultWatermark  Boolean     @default(false) @map("default_watermark")
+  isDemo            Boolean     @default(false) @map("is_demo")
+  expiresAt         DateTime?   @map("expires_at") @db.Timestamptz()
   createdAt         DateTime    @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt         DateTime    @updatedAt @map("updated_at") @db.Timestamptz()
 

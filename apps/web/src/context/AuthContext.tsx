@@ -12,6 +12,8 @@ export interface User {
   instagramHandle?: string | null;
   websiteUrl?: string | null;
   defaultWatermark?: boolean;
+  isDemo?: boolean;
+  expiresAt?: string | null;
 }
 
 interface AuthContextType {
@@ -27,6 +29,7 @@ interface AuthContextType {
     phone?: string;
   }) => Promise<void>;
   loginAsDemo: () => Promise<void>;
+  loginWithGoogle: (credentialOrToken: { credential?: string; accessToken?: string }) => Promise<void>;
   logout: () => void;
   updateProfile: (data: Partial<User>) => Promise<User>;
   authFetch: (url: string, init?: RequestInit) => Promise<Response>;
@@ -159,6 +162,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('frameflow_user', JSON.stringify(data.user));
   };
 
+  const loginWithGoogle = async (credentialOrToken: { credential?: string; accessToken?: string }) => {
+    const res = await fetch('/api/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentialOrToken)
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Failed to authenticate with Google.');
+    }
+
+    const data = await res.json();
+    setToken(data.token);
+    setUser(data.user);
+    localStorage.setItem('frameflow_token', data.token);
+    localStorage.setItem('frameflow_user', JSON.stringify(data.user));
+  };
+
   const logout = () => {
     setToken(null);
     setUser(null);
@@ -194,6 +216,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         loginAsDemo,
+        loginWithGoogle,
         logout,
         updateProfile,
         authFetch

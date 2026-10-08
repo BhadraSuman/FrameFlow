@@ -7,6 +7,7 @@ import eventsRouter from './routes/events.js';
 import uploadsRouter from './routes/uploads.js';
 import galleriesRouter from './routes/galleries.js';
 import storageRouter from './routes/storage.js';
+import { startDemoCleanupCron } from './cleanup.js';
 
 dotenv.config();
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
@@ -41,4 +42,5 @@ app.use('/api/storage', storageRouter);
 app.listen(PORT, () => {
   console.log(`🚀 [API] FrameFlow REST API listening on http://localhost:${PORT}`);
   console.log(`📸 Ready for direct uploads & gallery proofing`);
+  startDemoCleanupCron();
 });

@@ -135,9 +135,17 @@ export const AgencyDashboard: React.FC = () => {
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-900/90 to-rose-950/30 border border-zinc-800 p-6 sm:p-8 shadow-2xl">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
           <div>
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold uppercase tracking-wider mb-2.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{user?.studioName || 'Royal Weddings & Events Studio'}</span>
+            <div className="flex flex-wrap items-center gap-2 mb-2.5">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{user?.studioName || 'Royal Weddings & Events Studio'}</span>
+              </div>
+              {user?.isDemo && (
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold">
+                  <span>⏳ 24h Sandbox Studio</span>
+                  <span className="text-[10px] text-amber-400/80">• Auto-purges in 24h</span>
+                </div>
+              )}
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
               Client Galleries & Proofing Portal

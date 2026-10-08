@@ -57,6 +57,8 @@ export interface UserDTO {
   instagramHandle?: string | null;
   websiteUrl?: string | null;
   defaultWatermark?: boolean;
+  isDemo?: boolean;
+  expiresAt?: string | null;
 }
 
 export interface EventDTO {
