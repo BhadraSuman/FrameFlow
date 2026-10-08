@@ -188,12 +188,14 @@ export const EventStudio: React.FC = () => {
     }
   };
 
-  // Direct-to-Storage Resumable Upload Flow
+  // Direct-to-Storage Resumable Upload Flow with 3-file concurrency pool and retry
   const processFiles = async (files: FileList | File[]) => {
     if (!files || files.length === 0 || !event) return;
 
     setIsUploading(true);
-    const newItems: UploadProgressItem[] = Array.from(files).map((f) => ({
+    const fileList = Array.from(files);
+
+    const newItems: UploadProgressItem[] = fileList.map((f) => ({
       id: Math.random().toString(36).substring(7),
       filename: f.name,
       size: f.size,
@@ -203,77 +205,106 @@ export const EventStudio: React.FC = () => {
 
     setUploadQueue((prev) => [...newItems, ...prev]);
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const trackerId = newItems[i].id;
+    // Single file upload worker with retry logic
+    const uploadSingleFile = async (file: File, trackerId: string) => {
+      let attempts = 0;
+      const maxAttempts = 2;
 
-      try {
-        // 1. Presign upload URL
-        const presignRes = await authFetch('/api/uploads/presign', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            eventId: event.id,
-            filename: file.name,
-            fileSizeBytes: file.size,
-            mimeType: file.type || 'image/jpeg'
-          })
-        });
+      while (attempts < maxAttempts) {
+        attempts++;
+        try {
+          // 1. Presign upload URL
+          const presignRes = await authFetch('/api/uploads/presign', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              eventId: event.id,
+              filename: file.name,
+              fileSizeBytes: file.size,
+              mimeType: file.type || 'image/jpeg'
+            })
+          });
 
-        if (!presignRes.ok) throw new Error('Presigning failed');
-        const presignData = await presignRes.json();
-        const { mediaId, key, uploadUrl } = presignData;
+          if (!presignRes.ok) {
+            const errData = await presignRes.json().catch(() => ({}));
+            throw new Error(errData.error || 'Presigning failed');
+          }
 
-        setUploadQueue((prev) =>
-          prev.map((item) =>
-            item.id === trackerId
-              ? { ...item, id: mediaId, status: 'uploading', progress: 30 }
-              : item
-          )
-        );
+          const presignData = await presignRes.json();
+          const { mediaId, key, uploadUrl } = presignData;
 
-        // 2. Direct upload to storage (R2/S3/Local)
-        const uploadRes = await fetch(uploadUrl, {
-          method: 'PUT',
-          headers: { 'Content-Type': file.type || 'image/jpeg' },
-          body: file
-        });
+          setUploadQueue((prev) =>
+            prev.map((item) =>
+              item.id === trackerId
+                ? { ...item, id: mediaId, status: 'uploading', progress: 35 }
+                : item
+            )
+          );
 
-        if (!uploadRes.ok) throw new Error('Direct upload to storage failed');
+          // 2. Direct upload to storage (R2/S3/Local)
+          const uploadRes = await fetch(uploadUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': file.type || 'image/jpeg' },
+            body: file
+          });
 
-        setUploadQueue((prev) =>
-          prev.map((item) =>
-            item.id === mediaId
-              ? { ...item, status: 'processing', progress: 75 }
-              : item
-          )
-        );
+          if (!uploadRes.ok) throw new Error('Direct upload to storage failed');
 
-        // 3. Complete upload notification to API -> triggers Image Worker microservice
-        const completeRes = await authFetch('/api/uploads/complete', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            mediaId,
-            key,
-            eventId: event.id
-          })
-        });
+          setUploadQueue((prev) =>
+            prev.map((item) =>
+              item.id === mediaId
+                ? { ...item, status: 'processing', progress: 75 }
+                : item
+            )
+          );
 
-        if (!completeRes.ok) throw new Error('Failed to notify upload completion');
+          // 3. Complete upload notification to API -> triggers Image Worker microservice
+          const completeRes = await authFetch('/api/uploads/complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              mediaId,
+              key,
+              eventId: event.id
+            })
+          });
 
-        // Polling will update status to 'READY'
-      } catch (err: any) {
-        console.error('Upload error:', err);
-        setUploadQueue((prev) =>
-          prev.map((item) =>
-            item.id === trackerId
-              ? { ...item, status: 'failed', error: err.message }
-              : item
-          )
-        );
+          if (!completeRes.ok) throw new Error('Failed to notify upload completion');
+
+          return; // Success
+        } catch (err: any) {
+          if (attempts >= maxAttempts) {
+            console.error(`Upload error for ${file.name}:`, err);
+            setUploadQueue((prev) =>
+              prev.map((item) =>
+                item.id === trackerId || item.filename === file.name
+                  ? { ...item, status: 'failed', error: err.message }
+                  : item
+              )
+            );
+          } else {
+            // Wait 1s before retry
+            await new Promise((res) => setTimeout(res, 1000));
+          }
+        }
       }
-    }
+    };
+
+    // Run parallel uploads with a maximum concurrency limit of 3
+    const CONCURRENCY_LIMIT = 3;
+    const taskQueue = fileList.map((f, i) => ({ file: f, trackerId: newItems[i].id }));
+    let index = 0;
+
+    const worker = async () => {
+      while (index < taskQueue.length) {
+        const currentIndex = index++;
+        const task = taskQueue[currentIndex];
+        await uploadSingleFile(task.file, task.trackerId);
+      }
+    };
+
+    const workers = Array.from({ length: Math.min(CONCURRENCY_LIMIT, taskQueue.length) }, () => worker());
+    await Promise.all(workers);
 
     setIsUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = '';

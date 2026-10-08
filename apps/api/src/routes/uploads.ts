@@ -17,11 +17,31 @@ router.post('/presign', async (req, res) => {
     }
 
     const event = await prisma.event.findUnique({
-      where: { id: eventId }
+      where: { id: eventId },
+      include: {
+        user: {
+          select: { id: true }
+        }
+      }
     });
 
     if (!event) {
       res.status(404).json({ error: 'Event not found' });
+      return;
+    }
+
+    // Check 5 GB Studio Free Tier storage limit
+    const FREE_TIER_MAX_BYTES = 5n * 1024n * 1024n * 1024n; // 5 GB
+    const userEvents = await prisma.event.findMany({
+      where: { userId: event.userId },
+      select: { totalBytes: true }
+    });
+    const currentStorageBytes = userEvents.reduce((acc, ev) => acc + BigInt(ev.totalBytes || 0), 0n);
+
+    if (currentStorageBytes + BigInt(fileSizeBytes) > FREE_TIER_MAX_BYTES) {
+      res.status(400).json({
+        error: 'Studio storage quota exceeded (5 GB limit). Delete past events to free up space or upgrade your plan.'
+      });
       return;
     }
 

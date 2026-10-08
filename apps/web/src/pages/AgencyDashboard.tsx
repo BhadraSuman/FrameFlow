@@ -252,13 +252,13 @@ export const AgencyDashboard: React.FC = () => {
             </div>
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-[11px] text-zinc-400">
-                <span className="text-emerald-400 font-medium">AWS S3 Active</span>
-                <span className="font-mono text-zinc-500">1 GB quota</span>
+                <span className="text-emerald-400 font-medium">Cloud Storage (Active)</span>
+                <span className="font-mono text-zinc-500">5 GB Free quota</span>
               </div>
               <div className="w-full bg-zinc-800/80 h-1.5 rounded-full overflow-hidden">
                 <div
                   className="bg-gradient-to-r from-indigo-500 via-rose-500 to-amber-500 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, Math.max(3, (totalStorageMB / 1024) * 100))}%` }}
+                  style={{ width: `${Math.min(100, Math.max(3, (totalStorageMB / 5120) * 100))}%` }}
                 />
               </div>
             </div>

@@ -1,10 +1,22 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
+import rateLimit from 'express-rate-limit';
 import { prisma } from '@frameflow/db';
 import { getStorageService } from '../storage.js';
 
 const router = Router();
+
+// Rate limiter for PIN verification: max 5 attempts per IP per 10 minutes
+const pinRateLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: 'Too many incorrect PIN attempts. For security, please wait 10 minutes before trying again.'
+  }
+});
 
 // GET /api/galleries/:slug - Public event meta
 router.get('/:slug', async (req, res) => {
@@ -51,12 +63,13 @@ router.get('/:slug', async (req, res) => {
   }
 });
 
-// POST /api/galleries/:slug/verify-pin - Check PIN and issue session token
-router.post('/:slug/verify-pin', async (req, res) => {
+// POST /api/galleries/:slug/verify-pin - Check PIN and issue session token (rate-limited)
+router.post('/:slug/verify-pin', pinRateLimiter, async (req, res) => {
   try {
     const { pin } = req.body;
+    const slug = req.params.slug as string;
     const event = await prisma.event.findUnique({
-      where: { slug: req.params.slug }
+      where: { slug }
     });
 
     if (!event) {
@@ -217,6 +230,15 @@ router.post('/:slug/selections', async (req, res) => {
     }
 
     let round = event.selectionRounds[0];
+
+    // Check if selection round is locked or already submitted
+    if (round && (round.status === 'SUBMITTED' || round.status === 'LOCKED')) {
+      res.status(403).json({
+        error: 'Selection is locked. You have already submitted your photo choices. Please contact your photographer if you need to make changes.'
+      });
+      return;
+    }
+
     if (!round) {
       round = await prisma.selectionRound.create({
         data: {
