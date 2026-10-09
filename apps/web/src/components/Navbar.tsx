@@ -12,9 +12,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewEventClick }) => {
   const { user, logout } = useAuth();
   const isClientView = location.pathname.startsWith('/gallery');
   const isAuthView = location.pathname === '/login';
+  const isLandingView = location.pathname === '/';
 
-  if (isClientView || isAuthView) {
-    return null; // Client view and Auth view have their own bespoke layouts
+  if (isClientView || isAuthView || isLandingView) {
+    return null; // Client view, Auth view, and Landing page have their own bespoke layouts
   }
 
   const initials = user?.fullName
@@ -30,7 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewEventClick }) => {
     <header className="border-b border-zinc-200 bg-white/95 backdrop-blur-md sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
-        <Link to="/" className="flex items-center space-x-3 group">
+        <Link to={user ? "/dashboard" : "/"} className="flex items-center space-x-3 group">
           <div className="w-9 h-9 rounded-lg bg-iris-600 flex items-center justify-center text-white shadow-sm shadow-iris-600/30 group-hover:bg-iris-500 transition-colors">
             <Camera className="w-4 h-4" />
           </div>

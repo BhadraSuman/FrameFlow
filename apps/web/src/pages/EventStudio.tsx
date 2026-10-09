@@ -357,8 +357,8 @@ export const EventStudio: React.FC = () => {
   if (!event) {
     return (
       <div className="text-center py-24">
-        <p className="text-lg font-normal text-white font-serif">Event not found</p>
-        <Link to="/" className="text-iris-400 hover:underline text-xs mt-2 inline-block">
+        <p className="text-lg font-normal text-zinc-900 font-serif">Event not found</p>
+        <Link to="/dashboard" className="text-iris-600 hover:underline text-xs mt-2 inline-block">
           Return to Dashboard
         </Link>
       </div>
@@ -415,7 +415,7 @@ export const EventStudio: React.FC = () => {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-zinc-200">
         <div className="flex items-start space-x-4">
           <Link
-            to="/"
+            to="/dashboard"
             title="Return to Dashboard"
             className="p-2.5 rounded-lg bg-white border border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition shrink-0 mt-1 shadow-xs"
           >

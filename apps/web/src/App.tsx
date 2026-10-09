@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Navbar } from './components/Navbar';
+import { LandingPage } from './pages/LandingPage';
 import { AgencyDashboard } from './pages/AgencyDashboard';
 import { EventStudio } from './pages/EventStudio';
 import { ClientGallery } from './pages/ClientGallery';
@@ -20,9 +21,10 @@ export default function App() {
 
           <div className="flex-1 flex flex-col">
             <Routes>
+              <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route
-                path="/"
+                path="/dashboard"
                 element={
                   <ProtectedRoute>
                     <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">

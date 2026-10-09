@@ -30,15 +30,17 @@ export const LoginPage: React.FC = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // If already logged in, redirect to home
+  // If already logged in, redirect to dashboard
   React.useEffect(() => {
     if (user) {
-      const destination = (location.state as any)?.from?.pathname || '/';
+      const stateFrom = (location.state as any)?.from?.pathname;
+      const destination = stateFrom && stateFrom !== '/' ? stateFrom : '/dashboard';
       navigate(destination, { replace: true });
     }
   }, [user, navigate, location]);
 
-  const from = (location.state as any)?.from?.pathname || '/';
+  const stateFrom = (location.state as any)?.from?.pathname;
+  const from = stateFrom && stateFrom !== '/' ? stateFrom : '/dashboard';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
