@@ -15,7 +15,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-rose-500 selection:text-white">
+        <div className="min-h-screen bg-[#09090B] text-zinc-100 flex flex-col font-sans selection:bg-iris-600 selection:text-white">
           <Navbar onNewEventClick={() => setIsCreateModalOpen(true)} />
 
           <div className="flex-1 flex flex-col">

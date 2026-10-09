@@ -31,17 +31,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewEventClick }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link to="/" className="flex items-center space-x-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-600 flex items-center justify-center text-white shadow-lg shadow-rose-900/30 group-hover:scale-105 transition-transform duration-200">
-            <Camera className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-lg bg-iris-600 flex items-center justify-center text-white shadow-sm shadow-iris-600/30 group-hover:bg-iris-500 transition-colors">
+            <Camera className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="font-bold text-lg text-white tracking-tight">FrameFlow</span>
-              <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                Agency Studio
+              <span className="font-semibold text-base text-zinc-100 tracking-tight">FrameFlow</span>
+              <span className="text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded-full bg-iris-500/10 text-iris-300 border border-iris-500/20">
+                Studio
               </span>
             </div>
-            <p className="text-[11px] text-zinc-400 -mt-0.5 truncate max-w-[200px] sm:max-w-xs">
+            <p className="text-[11px] text-zinc-400 -mt-0.5 truncate max-w-[200px] sm:max-w-xs font-normal">
               {user?.studioName || 'Royal Weddings Photography'}
             </p>
           </div>
@@ -49,21 +49,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewEventClick }) => {
 
         {/* Studio Storage & User Controls */}
         <div className="flex items-center space-x-3 sm:space-x-4">
-          <div className="hidden md:flex items-center space-x-2.5 px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs">
-            <HardDrive className="w-4 h-4 text-zinc-400" />
-            <div className="text-zinc-300">
-              <span className="font-semibold text-white">Cloudflare R2</span>
-              <span className="text-zinc-500 mx-1.5">•</span>
-              <span className="text-emerald-400 font-medium">Zero Egress</span>
+          <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs">
+            <HardDrive className="w-3.5 h-3.5 text-zinc-400" />
+            <div className="text-zinc-300 flex items-center space-x-1.5">
+              <span className="font-medium text-zinc-200">Storage</span>
+              <span className="text-zinc-600">•</span>
+              <span className="text-emerald-400 font-medium">AWS S3 / R2</span>
             </div>
           </div>
 
           {onNewEventClick && user && (
             <button
               onClick={onNewEventClick}
-              className="flex items-center space-x-2 px-3.5 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-rose-900/30 transition hover:scale-[1.02] active:scale-[0.98]"
+              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-iris-600 hover:bg-iris-500 active:bg-iris-700 text-white text-xs font-medium shadow-sm transition"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Create Event</span>
             </button>
           )}
@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewEventClick }) => {
             <div className="flex items-center space-x-2 pl-2 border-l border-zinc-800">
               <div
                 title={`${user.fullName} (${user.email})`}
-                className="w-8 h-8 rounded-full bg-rose-600/20 text-rose-400 border border-rose-500/30 flex items-center justify-center text-xs font-bold font-mono"
+                className="w-8 h-8 rounded-full bg-zinc-800 text-zinc-200 border border-zinc-700 flex items-center justify-center text-xs font-medium font-mono"
               >
                 {initials}
               </div>
@@ -81,15 +81,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewEventClick }) => {
               <button
                 onClick={logout}
                 title="Log Out of Studio"
-                className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-rose-400 border border-zinc-800 hover:border-zinc-700 transition"
+                className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 border border-zinc-800 hover:border-zinc-700 transition"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-3.5 h-3.5" />
               </button>
             </div>
           ) : (
             <Link
               to="/login"
-              className="px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold border border-zinc-800 transition"
+              className="px-3.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-medium border border-zinc-800 transition"
             >
               Sign In
             </Link>

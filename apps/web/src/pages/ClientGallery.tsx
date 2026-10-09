@@ -266,18 +266,18 @@ export const ClientGallery: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-center p-4">
-        <div className="w-12 h-12 border-2 border-rose-500 border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-sm text-zinc-400 font-medium">Opening your private gallery...</p>
+      <div className="min-h-screen bg-[#09090B] flex flex-col items-center justify-center text-center p-4">
+        <div className="w-8 h-8 border-2 border-iris-500 border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-xs text-zinc-400 font-normal">Opening your private gallery...</p>
       </div>
     );
   }
 
   if (!eventMeta) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-center p-4">
-        <Camera className="w-12 h-12 text-zinc-600 mb-3" />
-        <h2 className="text-xl font-bold text-white font-serif">Gallery Not Found</h2>
+      <div className="min-h-screen bg-[#09090B] flex flex-col items-center justify-center text-center p-4">
+        <Camera className="w-10 h-10 text-zinc-600 mb-3" />
+        <h2 className="text-xl font-normal text-white font-serif">Gallery Not Found</h2>
         <p className="text-xs text-zinc-400 mt-1 max-w-sm">
           The link you followed may be incorrect, expired, or removed by the studio.
         </p>
@@ -291,30 +291,29 @@ export const ClientGallery: React.FC = () => {
       : photos;
 
   // =========================================================================
-  // VIEW 1: PIN CHALLENGE SCREEN (CINEMATIC LUXURY WEDDING THEME)
+  // VIEW 1: PIN CHALLENGE SCREEN (C1 · CLIENT PIN ENTRY / DESKTOP & MOBILE)
   // =========================================================================
   if (!isUnlocked) {
     return (
-      <div className="min-h-screen bg-zinc-950 text-white flex flex-col justify-between items-center p-6 relative overflow-hidden selection:bg-rose-500 selection:text-white">
-        {/* Subtle Ambient Backlight Glows */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-rose-600/15 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="min-h-screen bg-[#09090B] text-white flex flex-col justify-between items-center p-6 relative overflow-hidden selection:bg-iris-600 selection:text-white">
+        {/* Subtle Ambient Backlight */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-iris-600/10 rounded-full blur-[140px] pointer-events-none" />
 
         {/* Top Studio Watermark */}
         <div className="pt-10 text-center relative z-10">
-          <div className="inline-flex items-center space-x-2 text-rose-400 text-xs font-semibold uppercase tracking-widest px-3.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 mb-3.5">
+          <div className="inline-flex items-center space-x-2 text-zinc-300 text-xs font-medium px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 mb-3.5">
             {eventMeta.studio?.studioLogoUrl ? (
               <img src={eventMeta.studio.studioLogoUrl} alt="" className="w-4 h-4 rounded-full object-cover" />
             ) : (
-              <Sparkles className="w-3.5 h-3.5" />
+              <Sparkles className="w-3.5 h-3.5 text-iris-400" />
             )}
             <span>{eventMeta.studio?.studioName || 'Royal Weddings Photography'}</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-2xl mx-auto font-serif">
+          <h1 className="text-4xl sm:text-6xl font-normal tracking-tight text-white max-w-2xl mx-auto font-serif">
             {eventMeta.title}
           </h1>
-          <p className="text-sm text-zinc-400 mt-2.5">
-            Exclusively prepared for <span className="text-white font-medium">{eventMeta.clientName}</span> •{' '}
+          <p className="text-xs sm:text-sm text-zinc-400 mt-2">
+            Curated for <span className="text-zinc-200 font-medium">{eventMeta.clientName}</span> •{' '}
             {new Date(eventMeta.eventDate).toLocaleDateString('en-IN', {
               day: 'numeric',
               month: 'long',
@@ -325,21 +324,21 @@ export const ClientGallery: React.FC = () => {
 
         {/* Center PIN Authentication Card */}
         <div
-          className={`w-full max-w-md bg-zinc-900/90 border border-zinc-800 rounded-3xl p-8 sm:p-9 shadow-2xl backdrop-blur-2xl relative z-10 text-center transition ${
+          className={`w-full max-w-md bg-[#121214] border border-zinc-800/90 rounded-2xl p-8 sm:p-9 shadow-2xl relative z-10 text-center transition ${
             shake ? 'animate-shake' : ''
           }`}
         >
-          <div className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center mx-auto mb-5 shadow-lg shadow-rose-900/20">
-            <Lock className="w-7 h-7" />
+          <div className="w-12 h-12 rounded-xl bg-zinc-850 text-zinc-300 border border-zinc-700/80 flex items-center justify-center mx-auto mb-5">
+            <Lock className="w-5 h-5 text-zinc-400" />
           </div>
 
-          <h2 className="text-2xl font-bold text-white tracking-tight font-serif">Enter Gallery PIN</h2>
-          <p className="text-xs text-zinc-400 mt-1.5 max-w-xs mx-auto leading-relaxed">
+          <h2 className="text-2xl font-normal text-white tracking-tight font-serif">Enter Gallery PIN</h2>
+          <p className="text-xs text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed">
             Please enter the 4-digit security PIN provided in your invitation to view your photos.
           </p>
 
           {/* 4 Digit Boxes */}
-          <div className="mt-8 flex justify-center space-x-3 sm:space-x-4">
+          <div className="mt-7 flex justify-center space-x-3 sm:space-x-4">
             {pinDigits.map((digit, idx) => (
               <input
                 key={idx}
@@ -350,7 +349,7 @@ export const ClientGallery: React.FC = () => {
                 value={digit}
                 onChange={(e) => handleDigitChange(idx, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(idx, e)}
-                className="w-14 h-16 sm:w-16 sm:h-20 text-center text-3xl font-mono font-extrabold bg-zinc-950 border-2 border-zinc-800 focus:border-rose-500 rounded-2xl text-white outline-none transition shadow-inner"
+                className="w-13 h-16 sm:w-16 sm:h-20 text-center text-3xl font-mono font-medium bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-xl text-white outline-none transition"
               />
             ))}
           </div>
@@ -363,14 +362,14 @@ export const ClientGallery: React.FC = () => {
                 setPinDigits(['0', '0', '0', '0']);
                 verifyPin('0000');
               }}
-              className="text-xs text-rose-400 hover:text-rose-300 font-medium bg-rose-950/40 hover:bg-rose-950/70 border border-rose-800/40 px-3.5 py-1.5 rounded-full transition inline-flex items-center space-x-1.5 shadow"
+              className="text-xs text-zinc-400 hover:text-zinc-200 font-normal bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 px-3 py-1 rounded-full transition inline-flex items-center space-x-1.5"
             >
               <span>⚡ Test Mode: Click to auto-fill 0000</span>
             </button>
           </div>
 
           {pinError && (
-            <p className="text-xs text-rose-400 font-medium mt-3.5 animate-fadeIn">
+            <p className="text-xs text-red-400 font-medium mt-3.5 animate-fadeIn">
               {pinError}
             </p>
           )}
@@ -378,9 +377,9 @@ export const ClientGallery: React.FC = () => {
           <button
             onClick={() => verifyPin()}
             disabled={verifyingPin}
-            className="w-full mt-6 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-semibold text-sm shadow-xl shadow-rose-900/40 transition hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 flex items-center justify-center space-x-2"
+            className="w-full mt-6 py-2.5 px-5 rounded-lg bg-iris-600 hover:bg-iris-500 active:bg-iris-700 text-white font-medium text-xs shadow-sm shadow-iris-600/30 transition disabled:opacity-50 flex items-center justify-center space-x-2"
           >
-            <KeyRound className="w-4 h-4" />
+            <KeyRound className="w-3.5 h-3.5" />
             <span>{verifyingPin ? 'Unlocking...' : 'Unlock Private Gallery'}</span>
           </button>
         </div>
@@ -397,24 +396,24 @@ export const ClientGallery: React.FC = () => {
   // VIEW 2: UNLOCKED EDITORIAL CLIENT GALLERY
   // =========================================================================
   return (
-    <div className="min-h-screen bg-zinc-950 text-white flex flex-col selection:bg-rose-500 selection:text-white">
+    <div className="min-h-screen bg-[#09090B] text-white flex flex-col selection:bg-iris-600 selection:text-white">
       {/* Top Editorial Sticky Header */}
-      <header className="border-b border-zinc-800/80 bg-zinc-950/85 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between">
+      <header className="border-b border-zinc-800 bg-[#09090B]/90 backdrop-blur-md sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3 truncate mr-4">
             {eventMeta.studio?.studioLogoUrl ? (
               <img
                 src={eventMeta.studio.studioLogoUrl}
                 alt=""
-                className="w-10 h-10 rounded-2xl object-cover border border-zinc-700 shrink-0"
+                className="w-9 h-9 rounded-lg object-cover border border-zinc-700 shrink-0"
               />
             ) : (
-              <div className="w-10 h-10 rounded-2xl bg-rose-600/10 text-rose-400 border border-rose-500/20 flex items-center justify-center shrink-0">
-                <Camera className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-lg bg-zinc-850 text-zinc-300 border border-zinc-700/80 flex items-center justify-center shrink-0">
+                <Camera className="w-4 h-4 text-zinc-400" />
               </div>
             )}
             <div className="truncate">
-              <h2 className="text-base font-bold text-white truncate tracking-tight font-serif">
+              <h2 className="text-base font-normal text-white truncate tracking-tight font-serif">
                 {eventMeta.title}
               </h2>
               <p className="text-[11px] text-zinc-400 truncate">
@@ -426,11 +425,11 @@ export const ClientGallery: React.FC = () => {
           {/* Controls: Filter Pills & Grid View Switcher */}
           <div className="flex items-center space-x-3 shrink-0">
             {/* Grid density toggle (Desktop) */}
-            <div className="hidden md:flex items-center space-x-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+            <div className="hidden md:flex items-center space-x-1 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
               <button
                 onClick={() => setGridColumns(3)}
                 title="3 Columns (Large)"
-                className={`p-1.5 rounded-lg transition ${
+                className={`p-1.5 rounded-md transition ${
                   gridColumns === 3 ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'
                 }`}
               >
@@ -439,7 +438,7 @@ export const ClientGallery: React.FC = () => {
               <button
                 onClick={() => setGridColumns(4)}
                 title="4 Columns"
-                className={`p-1.5 rounded-lg transition ${
+                className={`p-1.5 rounded-md transition ${
                   gridColumns === 4 ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'
                 }`}
               >
@@ -448,12 +447,12 @@ export const ClientGallery: React.FC = () => {
             </div>
 
             {/* Filter Pills */}
-            <div className="flex items-center space-x-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+            <div className="flex items-center space-x-1 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
               <button
                 onClick={() => setFilterMode('all')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition ${
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition ${
                   filterMode === 'all'
-                    ? 'bg-rose-600 text-white shadow'
+                    ? 'bg-zinc-800 text-white shadow-sm'
                     : 'text-zinc-400 hover:text-white'
                 }`}
               >
@@ -461,9 +460,9 @@ export const ClientGallery: React.FC = () => {
               </button>
               <button
                 onClick={() => setFilterMode('selected')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center space-x-1.5 ${
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition flex items-center space-x-1.5 ${
                   filterMode === 'selected'
-                    ? 'bg-rose-600 text-white shadow'
+                    ? 'bg-iris-600 text-white shadow-sm'
                     : 'text-zinc-400 hover:text-white'
                 }`}
               >
@@ -477,26 +476,26 @@ export const ClientGallery: React.FC = () => {
 
       {/* Main Gallery Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-36">
-        {/* Luxury Editorial Hero Cover Banner */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-900/90 to-rose-950/40 border border-zinc-800 p-6 sm:p-10 shadow-2xl">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-rose-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+        {/* Luxury Editorial Hero Cover Banner (C2 · Story Cover) */}
+        <div className="relative overflow-hidden rounded-2xl bg-[#121214] border border-zinc-800/90 p-6 sm:p-10 shadow-xl">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-iris-600/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
 
           <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-3">
-              <div className="inline-flex items-center space-x-2 text-rose-400 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">
-                <Sparkles className="w-3.5 h-3.5" />
+              <div className="inline-flex items-center space-x-2 text-zinc-300 text-xs font-medium px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800">
+                <Sparkles className="w-3.5 h-3.5 text-iris-400" />
                 <span>
                   {eventMeta.studio?.studioName ? `${eventMeta.studio.studioName} • ` : ''}
                   {eventMeta.eventType} Collection
                 </span>
               </div>
-              <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-serif">
+              <h1 className="text-4xl sm:text-6xl font-normal text-white tracking-tight font-serif">
                 {eventMeta.title}
               </h1>
               <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
-                Welcome to your bespoke photo proofing gallery. Tap the heart icon on your favorite photos to curate your wedding album.
+                Welcome to your private proofing gallery. Tap the heart icon on your favorite photos to curate your bespoke album.
                 {eventMeta.maxSelections && (
-                  <span className="block mt-1 text-rose-400 font-semibold">
+                  <span className="block mt-1 text-iris-300 font-medium">
                     Package allowance: {eventMeta.maxSelections} photos included.
                   </span>
                 )}
@@ -504,12 +503,12 @@ export const ClientGallery: React.FC = () => {
             </div>
 
             {/* Selection Progress Pill */}
-            <div className="flex flex-col sm:items-end space-y-2 shrink-0 bg-zinc-950/70 border border-zinc-800/80 p-4 rounded-2xl backdrop-blur">
-              <span className="text-[11px] uppercase tracking-wider font-semibold text-zinc-400">
-                {eventMeta.maxSelections ? 'Package Quota Tracker' : 'Album Selection Progress'}
+            <div className="flex flex-col sm:items-end space-y-2 shrink-0 bg-[#18181B] border border-zinc-800/80 p-4 rounded-xl">
+              <span className="text-[11px] uppercase tracking-wider font-medium text-zinc-400">
+                {eventMeta.maxSelections ? 'Package Allowance' : 'Album Selection Progress'}
               </span>
               <div className="flex items-center space-x-2">
-                <span className="text-2xl font-bold font-mono text-rose-400">
+                <span className="text-2xl font-normal font-mono text-iris-400">
                   {selectedIds.length}
                 </span>
                 <span className="text-xs text-zinc-400">
@@ -525,15 +524,15 @@ export const ClientGallery: React.FC = () => {
                   ) : eventMeta.maxSelections - selectedIds.length === 0 ? (
                     <span className="text-amber-400 font-medium">Limit reached</span>
                   ) : (
-                    <span className="text-rose-400 font-medium">
+                    <span className="text-red-400 font-medium">
                       {Math.abs(eventMeta.maxSelections - selectedIds.length)} over limit
                     </span>
                   )}
                 </div>
               )}
-              <div className="w-36 bg-zinc-800 h-2 rounded-full overflow-hidden">
+              <div className="w-36 bg-zinc-800 h-1.5 rounded-full overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-rose-600 to-rose-400 h-full rounded-full transition-all duration-300"
+                  className="bg-iris-600 h-full rounded-full transition-all duration-300"
                   style={{
                     width: `${Math.min(
                       100,
@@ -552,7 +551,7 @@ export const ClientGallery: React.FC = () => {
 
         {/* Submitted Status Toast */}
         {submitted && (
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/80 to-zinc-900 border border-emerald-800/80 text-emerald-300 flex items-center justify-between text-xs sm:text-sm shadow-2xl">
+          <div className="p-4 rounded-xl bg-zinc-900 border border-emerald-800/60 text-emerald-300 flex items-center justify-between text-xs sm:text-sm shadow-lg">
             <div className="flex items-center space-x-3">
               <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" />
               <span>
@@ -564,9 +563,9 @@ export const ClientGallery: React.FC = () => {
 
         {/* Empty Filter State */}
         {filteredPhotos.length === 0 && (
-          <div className="text-center py-24 bg-zinc-900/30 rounded-3xl border border-zinc-800/80 p-8">
-            <Heart className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-white font-serif">No photos match your filter</h3>
+          <div className="text-center py-24 bg-[#121214] rounded-xl border border-zinc-800 p-8">
+            <Heart className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
+            <h3 className="text-base font-normal text-white font-serif">No photos match your filter</h3>
             <p className="text-xs text-zinc-400 mt-1 max-w-sm mx-auto">
               {filterMode === 'selected'
                 ? "You haven't selected any favorite photos yet. Tap the heart icon on any photo to add it to your selection."
@@ -575,7 +574,7 @@ export const ClientGallery: React.FC = () => {
             {filterMode === 'selected' && (
               <button
                 onClick={() => setFilterMode('all')}
-                className="mt-4 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold transition"
+                className="mt-4 px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium transition"
               >
                 Browse All Photos
               </button>
@@ -583,7 +582,7 @@ export const ClientGallery: React.FC = () => {
           </div>
         )}
 
-        {/* Responsive Photo Grid with Dynamic Density */}
+        {/* Responsive Photo Grid with Dynamic Density (C3 · Selection Grid) */}
         <div
           className={`grid gap-3 sm:gap-4 ${
             gridColumns === 3
@@ -600,10 +599,10 @@ export const ClientGallery: React.FC = () => {
               <div
                 key={photo.id}
                 onClick={() => setLightboxIndex(index)}
-                className={`group relative aspect-square bg-zinc-900 rounded-2xl overflow-hidden border-2 transition-all duration-300 cursor-pointer shadow-lg ${
+                className={`group relative aspect-square bg-[#121214] rounded-[6px] overflow-hidden border transition-all duration-200 cursor-pointer shadow-sm ${
                   isSelected
-                    ? 'border-rose-500 ring-4 ring-rose-500/20 scale-[0.98]'
-                    : 'border-zinc-800/80 hover:border-zinc-600'
+                    ? 'border-iris-500 ring-2 ring-iris-500/30'
+                    : 'border-zinc-800/80 hover:border-zinc-700'
                 }`}
               >
                 {/* 400px WebP Thumbnail */}
@@ -615,7 +614,7 @@ export const ClientGallery: React.FC = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-xs text-zinc-500 bg-zinc-950">
+                  <div className="w-full h-full flex items-center justify-center text-xs text-zinc-500 bg-[#121214]">
                     Processing...
                   </div>
                 )}
@@ -628,19 +627,19 @@ export const ClientGallery: React.FC = () => {
                     toggleSelection(photo.id);
                   }}
                   disabled={submitted}
-                  className={`absolute top-2.5 right-2.5 w-9 h-9 rounded-full flex items-center justify-center shadow-xl transition transform active:scale-75 ${
+                  className={`absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center shadow-md transition transform active:scale-75 ${
                     isSelected
-                      ? 'bg-rose-600 text-white scale-110 shadow-rose-900/50 animate-heartPop'
-                      : 'bg-black/60 text-white/80 hover:bg-black/85 hover:text-white'
+                      ? 'bg-iris-600 text-white scale-105 shadow-iris-600/40 animate-heartPop'
+                      : 'bg-black/50 text-white/80 hover:bg-black/80 hover:text-white border border-white/20'
                   }`}
                   title={isSelected ? 'Remove from selection' : 'Select this photo'}
                 >
-                  <Heart className={`w-4 h-4 ${isSelected ? 'fill-current' : ''}`} />
+                  <Heart className={`w-3.5 h-3.5 ${isSelected ? 'fill-current' : ''}`} />
                 </button>
 
                 {/* Filename & Dimension Label on Hover */}
                 <div className="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition pointer-events-none">
-                  <p className="text-[11px] text-white font-medium truncate">
+                  <p className="text-[11px] text-white font-medium truncate font-mono">
                     {photo.originalFilename}
                   </p>
                 </div>
@@ -652,20 +651,20 @@ export const ClientGallery: React.FC = () => {
 
       {/* Floating Limit Notice Toast */}
       {limitNotice && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-rose-600 text-white px-5 py-2.5 rounded-full text-xs font-semibold shadow-2xl animate-bounce flex items-center space-x-2">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-amber-600 text-white px-4 py-2 rounded-full text-xs font-medium shadow-2xl animate-bounce flex items-center space-x-2">
           <span>⚠️ {limitNotice}</span>
         </div>
       )}
 
-      {/* Floating Glass Action Dock (Bottom Bar) */}
+      {/* Floating Glass Action Dock (C3 · Client Bottom Bar) */}
       <div className="fixed bottom-6 inset-x-4 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-40">
-        <div className="bg-zinc-900/90 border border-zinc-700/60 rounded-3xl p-3.5 px-6 shadow-2xl backdrop-blur-2xl flex items-center justify-between space-x-6 min-w-[320px] sm:min-w-[460px]">
+        <div className="bg-[#121214]/95 border border-zinc-800/90 rounded-2xl p-3 px-5 shadow-2xl backdrop-blur-xl flex items-center justify-between space-x-6 min-w-[320px] sm:min-w-[440px]">
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-rose-400 font-extrabold text-lg sm:text-xl">
+              <span className="text-iris-400 font-normal text-lg sm:text-xl font-mono">
                 {selectedIds.length}
               </span>
-              <span className="text-xs sm:text-sm text-zinc-200 font-semibold">
+              <span className="text-xs sm:text-sm text-zinc-200 font-medium">
                 {eventMeta.maxSelections
                   ? `of ${eventMeta.maxSelections} Max Allowed`
                   : `of ${photos.length} Photos Selected`}
@@ -685,10 +684,10 @@ export const ClientGallery: React.FC = () => {
           <button
             onClick={() => setIsSubmitModalOpen(true)}
             disabled={selectedIds.length === 0 || submitted}
-            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-rose-600 via-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-semibold shadow-lg shadow-rose-900/40 transition hover:scale-[1.02] active:scale-[0.98] flex items-center space-x-2 shrink-0"
+            className="px-4 py-2 rounded-lg bg-iris-600 hover:bg-iris-500 active:bg-iris-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-medium shadow-sm shadow-iris-600/30 transition flex items-center space-x-2 shrink-0"
           >
             <Send className="w-3.5 h-3.5" />
-            <span>{submitted ? 'Submitted' : 'Submit Selections'}</span>
+            <span>{submitted ? 'Submitted' : 'Submit Selection'}</span>
           </button>
         </div>
       </div>
@@ -768,7 +767,7 @@ export const ClientGallery: React.FC = () => {
               disabled={submitted}
               className={`px-5 py-2.5 rounded-2xl text-xs font-semibold flex items-center space-x-2 transition shadow-xl ${
                 selectedIds.includes(filteredPhotos[lightboxIndex].id)
-                  ? 'bg-rose-600 text-white shadow-rose-900/50'
+                  ? 'bg-iris-600 text-white shadow-iris-900/50'
                   : 'bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700'
               }`}
             >
@@ -790,9 +789,9 @@ export const ClientGallery: React.FC = () => {
                 <button
                   key={p.id}
                   onClick={() => setLightboxIndex(idx)}
-                  className={`w-12 h-12 rounded-lg overflow-hidden shrink-0 border-2 transition ${
+                  className={`w-12 h-12 rounded-[6px] overflow-hidden shrink-0 border-2 transition ${
                     idx === lightboxIndex
-                      ? 'border-rose-500 scale-105'
+                      ? 'border-iris-500 scale-105'
                       : 'border-transparent opacity-50 hover:opacity-100'
                   }`}
                 >
@@ -807,15 +806,15 @@ export const ClientGallery: React.FC = () => {
       {/* Submission Confirmation Modal */}
       {isSubmitModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-          <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
-            <h3 className="text-xl font-bold text-white tracking-tight font-serif">Submit Your Selection</h3>
+          <div className="w-full max-w-md bg-[#121214] border border-zinc-800 rounded-2xl p-6 sm:p-7 shadow-2xl relative">
+            <h3 className="text-xl font-normal text-white tracking-tight font-serif">Submit Your Selection</h3>
             <p className="text-xs text-zinc-400 mt-1">
-              You are submitting <strong>{selectedIds.length} chosen photos</strong> to your photographer.
+              You are submitting <strong className="text-zinc-200">{selectedIds.length} chosen photos</strong> to your photographer.
             </p>
 
             {/* Selected Photos Visual Preview Strip */}
             <div className="mt-4">
-              <label className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-[11px] font-medium text-zinc-400 uppercase tracking-wider mb-2">
                 Selected Photos ({selectedIds.length})
               </label>
               <div className="flex items-center space-x-2 overflow-x-auto py-1">
@@ -827,11 +826,11 @@ export const ClientGallery: React.FC = () => {
                       key={p.id}
                       src={p.thumbnailUrl || ''}
                       alt=""
-                      className="w-12 h-12 rounded-xl object-cover shrink-0 border border-zinc-700 shadow"
+                      className="w-12 h-12 rounded-[6px] object-cover shrink-0 border border-zinc-700/80 shadow"
                     />
                   ))}
                 {selectedIds.length > 6 && (
-                  <div className="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0 text-xs font-mono font-bold text-zinc-300">
+                  <div className="w-12 h-12 rounded-[6px] bg-[#18181B] border border-zinc-700/80 flex items-center justify-center shrink-0 text-xs font-mono font-medium text-zinc-300">
                     +{selectedIds.length - 6}
                   </div>
                 )}
@@ -839,7 +838,7 @@ export const ClientGallery: React.FC = () => {
             </div>
 
             <div className="mt-4">
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
                 Notes for the Photographer (Optional)
               </label>
               <textarea
@@ -847,21 +846,21 @@ export const ClientGallery: React.FC = () => {
                 value={clientNotes}
                 onChange={(e) => setClientNotes(e.target.value)}
                 placeholder="e.g. Please use photo #12 for the full double spread..."
-                className="w-full bg-zinc-950 border border-zinc-800 focus:border-rose-500 rounded-xl p-3 text-xs text-white placeholder-zinc-500 outline-none transition"
+                className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg p-3 text-xs text-white placeholder-zinc-500 outline-none transition"
               />
             </div>
 
             <div className="mt-6 flex items-center justify-end space-x-3">
               <button
                 onClick={() => setIsSubmitModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition"
+                className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmitSelections}
                 disabled={submitting || (eventMeta.maxSelections ? selectedIds.length > eventMeta.maxSelections : false)}
-                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition shadow-lg shadow-rose-900/30 flex items-center space-x-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 rounded-lg bg-iris-600 hover:bg-iris-500 active:bg-iris-700 text-white text-xs font-medium transition shadow-sm shadow-iris-600/30 flex items-center space-x-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{submitting ? 'Submitting...' : 'Confirm & Submit'}</span>
@@ -878,7 +877,7 @@ export const ClientGallery: React.FC = () => {
             {eventMeta.studio?.studioLogoUrl ? (
               <img src={eventMeta.studio.studioLogoUrl} alt="" className="w-5 h-5 rounded-full object-cover" />
             ) : (
-              <Camera className="w-4 h-4 text-rose-500" />
+              <Camera className="w-4 h-4 text-iris-500" />
             )}
             <span>{eventMeta.studio?.studioName || 'Royal Weddings Photography'}</span>
           </div>
@@ -889,7 +888,7 @@ export const ClientGallery: React.FC = () => {
                 href={`https://instagram.com/${eventMeta.studio.instagramHandle.replace('@', '')}`}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-rose-400 transition"
+                className="hover:text-iris-400 transition"
               >
                 @{eventMeta.studio.instagramHandle.replace('@', '')}
               </a>
@@ -899,7 +898,7 @@ export const ClientGallery: React.FC = () => {
                 href={eventMeta.studio.websiteUrl.startsWith('http') ? eventMeta.studio.websiteUrl : `https://${eventMeta.studio.websiteUrl}`}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-rose-400 transition"
+                className="hover:text-iris-400 transition"
               >
                 Visit Website
               </a>

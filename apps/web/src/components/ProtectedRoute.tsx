@@ -9,7 +9,7 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
   if (isLoading) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center text-center p-6">
-        <div className="w-10 h-10 border-2 border-rose-500 border-t-transparent rounded-full animate-spin mb-4" />
+        <div className="w-10 h-10 border-2 border-iris-500 border-t-transparent rounded-full animate-spin mb-4" />
         <p className="text-sm font-medium text-zinc-400">Verifying studio session...</p>
       </div>
     );

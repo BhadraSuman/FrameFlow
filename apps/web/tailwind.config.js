@@ -7,21 +7,43 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        serif: ['"Instrument Serif"', '"EB Garamond"', 'Georgia', 'serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
+      borderRadius: {
+        photo: '6px',
+      },
       colors: {
+        iris: {
+          50: '#EEF2FF',
+          100: '#E0E7FF',
+          200: '#C7D2FE',
+          300: '#A5B4FC',
+          400: '#818CF8',
+          500: '#6366F1',
+          600: '#4F46E5', // Primary Stitch Iris Accent
+          700: '#4338CA', // Hover
+          800: '#3730A3',
+          900: '#312E81',
+          950: '#1E1B4B',
+        },
+        surface: {
+          DEFAULT: '#FFFFFF',
+          dark: '#121214',
+          raised: '#18181B',
+          muted: '#1F1F23',
+        },
         brand: {
-          50: '#fff1f2',
-          100: '#ffe4e6',
-          200: '#fecdd3',
-          500: '#f43f5e',
-          600: '#e11d48',
-          700: '#be123c',
-          800: '#9f1239',
-          900: '#881337',
-          950: '#4c0519',
+          50: '#EEF2FF',
+          100: '#E0E7FF',
+          200: '#C7D2FE',
+          500: '#6366F1',
+          600: '#4F46E5',
+          700: '#4338CA',
+          800: '#3730A3',
+          900: '#312E81',
+          950: '#1E1B4B',
         },
         gold: {
           400: '#fbbf24',

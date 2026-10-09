@@ -54,19 +54,19 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
   };
 
   const presetColors = [
-    { name: 'Rose Luxury', color: '#f43f5e' },
+    { name: 'Signature Iris', color: '#4F46E5' },
     { name: 'Royal Gold', color: '#eab308' },
     { name: 'Emerald Class', color: '#10b981' },
-    { name: 'Midnight Indigo', color: '#6366f1' },
+    { name: 'Rose Luxury', color: '#f43f5e' },
     { name: 'Modern Amber', color: '#f59e0b' }
   ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-      <div className="w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+      <div className="w-full max-w-xl bg-[#121214] border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
         <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
           <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-lg bg-iris-500/10 border border-iris-500/20 text-iris-400 flex items-center justify-center">
               <Building className="w-4 h-4" />
             </div>
             <div>
@@ -76,7 +76,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+            className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -84,13 +84,13 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
 
         <form onSubmit={handleSave} className="space-y-4 pt-5">
           {error && (
-            <div className="p-3 rounded-xl bg-red-950/80 border border-red-800 text-red-300 text-xs">
+            <div className="p-3 rounded-lg bg-red-950/80 border border-red-800 text-red-300 text-xs">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="p-3 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-xs flex items-center space-x-2">
+            <div className="p-3 rounded-lg bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-xs flex items-center space-x-2">
               <Check className="w-4 h-4" />
               <span>Studio branding updated successfully!</span>
             </div>
@@ -108,7 +108,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
                 value={studioName}
                 onChange={(e) => setStudioName(e.target.value)}
                 placeholder="e.g. Royal Weddings Studio"
-                className="w-full bg-zinc-950 border border-zinc-800 focus:border-rose-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none transition"
+                className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg px-3.5 py-2 text-sm text-white outline-none transition"
               />
             </div>
             <div>
@@ -121,7 +121,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="e.g. Rahul Sharma"
-                className="w-full bg-zinc-950 border border-zinc-800 focus:border-rose-500 rounded-xl px-3.5 py-2 text-sm text-white outline-none transition"
+                className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg px-3.5 py-2 text-sm text-white outline-none transition"
               />
             </div>
           </div>
@@ -136,7 +136,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
               value={studioLogoUrl}
               onChange={(e) => setStudioLogoUrl(e.target.value)}
               placeholder="https://example.com/logo.png"
-              className="w-full bg-zinc-950 border border-zinc-800 focus:border-rose-500 rounded-xl px-3.5 py-2 text-sm text-white placeholder-zinc-600 outline-none transition"
+              className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg px-3.5 py-2 text-sm text-white placeholder-zinc-600 outline-none transition"
             />
             <p className="text-[11px] text-zinc-500 mt-1">
               Displays on the client PIN unlock screen, gallery navigation header, and proofs.
@@ -156,7 +156,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
                   value={instagramHandle}
                   onChange={(e) => setInstagramHandle(e.target.value)}
                   placeholder="@royalweddings"
-                  className="w-full bg-zinc-950 border border-zinc-800 focus:border-rose-500 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-zinc-600 outline-none transition"
+                  className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-zinc-600 outline-none transition"
                 />
               </div>
             </div>
@@ -172,7 +172,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
                   value={websiteUrl}
                   onChange={(e) => setWebsiteUrl(e.target.value)}
                   placeholder="royalweddings.com"
-                  className="w-full bg-zinc-950 border border-zinc-800 focus:border-rose-500 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-zinc-600 outline-none transition"
+                  className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-zinc-600 outline-none transition"
                 />
               </div>
             </div>
@@ -202,19 +202,19 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
                 type="text"
                 value={brandColor}
                 onChange={(e) => setBrandColor(e.target.value)}
-                className="w-24 bg-zinc-950 border border-zinc-800 focus:border-rose-500 rounded-xl px-2.5 py-1 text-xs text-white font-mono uppercase outline-none ml-2"
+                className="w-24 bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg px-2.5 py-1 text-xs text-white font-mono uppercase outline-none ml-2"
               />
             </div>
           </div>
 
           {/* Default Watermark Toggle */}
           <div className="pt-2">
-            <label className="flex items-center space-x-3 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 rounded-2xl p-3.5 cursor-pointer transition">
+            <label className="flex items-center space-x-3 bg-[#18181B] border border-zinc-800 hover:border-zinc-700 rounded-lg p-3.5 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={defaultWatermark}
                 onChange={(e) => setDefaultWatermark(e.target.checked)}
-                className="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 bg-zinc-900 border-zinc-700 cursor-pointer"
+                className="w-4 h-4 rounded text-iris-600 focus:ring-iris-500 bg-zinc-900 border-zinc-700 cursor-pointer"
               />
               <div className="text-xs">
                 <span className="font-semibold text-zinc-200 block">Enable Proof Watermarking by Default</span>
@@ -230,14 +230,14 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition"
+              className="px-5 py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition shadow-lg shadow-rose-900/30 flex items-center space-x-1.5 disabled:opacity-50"
+              className="px-6 py-2.5 rounded-lg bg-iris-600 hover:bg-iris-500 text-white text-xs font-semibold transition shadow-sm shadow-iris-600/30 flex items-center space-x-1.5 disabled:opacity-50"
             >
               {saving ? 'Saving...' : 'Save Studio Branding'}
             </button>
