@@ -84,53 +84,55 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090B] text-white flex flex-col justify-between items-center p-4 sm:p-6 lg:p-8 relative overflow-hidden selection:bg-iris-600 selection:text-white">
+    <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 flex flex-col justify-between items-center p-4 sm:p-6 lg:p-8 relative overflow-hidden selection:bg-iris-600 selection:text-white">
       {/* Background Ambient Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-iris-600/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-iris-600/5 rounded-full blur-[140px] pointer-events-none" />
 
       {/* Brand Header */}
       <div className="pt-6 sm:pt-10 text-center relative z-10 max-w-lg mx-auto">
         <Link to="/" className="inline-flex items-center space-x-3 mb-4 group">
-          <div className="w-11 h-11 rounded-lg bg-iris-600 flex items-center justify-center text-white shadow-sm shadow-iris-600/30 group-hover:bg-iris-500 transition-colors">
+          <div className="w-11 h-11 rounded-lg bg-iris-600 flex items-center justify-center text-white shadow-sm shadow-iris-600/20 group-hover:bg-iris-700 transition-colors">
             <Camera className="w-5 h-5" />
           </div>
-          <span className="text-2xl font-normal tracking-tight text-white font-serif">FrameFlow</span>
+          <span className="text-2xl font-normal tracking-tight text-zinc-900 font-serif">FrameFlow</span>
         </Link>
 
-        <div className="inline-flex items-center space-x-2 text-zinc-300 text-xs font-medium px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 mb-2">
-          <Sparkles className="w-3.5 h-3.5 text-iris-400" />
-          <span>Photography Studio Portal</span>
+        <div>
+          <div className="inline-flex items-center space-x-2 text-zinc-700 text-xs font-medium px-3 py-1 rounded-full bg-white border border-zinc-200 shadow-sm mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-iris-600" />
+            <span>Photography Studio Portal</span>
+          </div>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-normal tracking-tight text-white font-serif">
+        <h1 className="text-3xl sm:text-5xl font-normal tracking-tight text-zinc-900 font-serif">
           {mode === 'LOGIN' ? 'Welcome Back, Photographer' : 'Create Your Studio Portal'}
         </h1>
-        <p className="text-xs sm:text-sm text-zinc-400 mt-2 max-w-md mx-auto">
+        <p className="text-xs sm:text-sm text-zinc-600 mt-2 max-w-md mx-auto">
           High-resolution photo proofing, streaming zero-egress ingestion, and client selection management.
         </p>
       </div>
 
       {/* Auth Card Container */}
-      <div className="w-full max-w-md bg-[#121214] border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative z-10 my-8">
+      <div className="w-full max-w-md bg-white border border-zinc-200 rounded-2xl p-6 sm:p-8 shadow-xl relative z-10 my-8">
         {/* 1-Click Fast Demo Login Banner */}
-        <div className="mb-6 p-4 rounded-xl bg-[#18181B] border border-zinc-800">
+        <div className="mb-6 p-4 rounded-xl bg-zinc-50 border border-zinc-200">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-medium tracking-wider text-iris-300 uppercase flex items-center space-x-1.5">
+            <span className="text-[11px] font-semibold tracking-wider text-iris-700 uppercase flex items-center space-x-1.5">
               <Zap className="w-3.5 h-3.5 fill-current" />
               <span>Sandbox Studio</span>
             </span>
-            <span className="text-[10px] bg-zinc-800 text-zinc-300 font-mono px-2 py-0.5 rounded-full">
+            <span className="text-[10px] bg-zinc-200/80 text-zinc-700 font-mono px-2 py-0.5 rounded-full font-medium">
               24h TTL
             </span>
           </div>
-          <p className="text-xs text-zinc-400 mb-3 leading-relaxed">
-            Spins up an isolated sandbox studio for testing. All events and uploaded media are <strong>automatically purged after 24 hours</strong>.
+          <p className="text-xs text-zinc-600 mb-3 leading-relaxed">
+            Spins up an isolated sandbox studio for testing. All events and uploaded media are <strong className="text-zinc-900">automatically purged after 24 hours</strong>.
           </p>
           <button
             type="button"
             onClick={handleDemoLogin}
             disabled={demoLoading || loading}
-            className="w-full py-2.5 px-4 rounded-lg bg-iris-600 hover:bg-iris-500 active:bg-iris-700 text-white font-medium text-xs shadow-sm shadow-iris-600/30 transition flex items-center justify-center space-x-2 disabled:opacity-50"
+            className="w-full py-2.5 px-4 rounded-lg bg-iris-600 hover:bg-iris-700 active:bg-iris-800 text-white font-medium text-xs shadow-sm shadow-iris-600/20 transition flex items-center justify-center space-x-2 disabled:opacity-50"
           >
             <Zap className="w-3.5 h-3.5" />
             <span>{demoLoading ? 'Spinning up Sandbox Studio...' : '⚡ 1-Click Demo Studio (24h Auto-Purge)'}</span>
@@ -166,7 +168,7 @@ export const LoginPage: React.FC = () => {
               }
             }}
             disabled={googleLoading || loading}
-            className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-900 font-semibold text-xs transition flex items-center justify-center space-x-2.5 shadow-md active:scale-[0.99]"
+            className="w-full py-2.5 px-4 rounded-xl bg-zinc-50 hover:bg-zinc-100 text-zinc-800 font-semibold text-xs transition flex items-center justify-center space-x-2.5 border border-zinc-200 shadow-sm active:scale-[0.99]"
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path
@@ -191,16 +193,16 @@ export const LoginPage: React.FC = () => {
 
           <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-zinc-800" />
+              <div className="w-full border-t border-zinc-200" />
             </div>
             <div className="relative flex justify-center text-[10px] uppercase font-semibold">
-              <span className="bg-[#121214] px-3 text-zinc-500">Or continue with email</span>
+              <span className="bg-white px-3 text-zinc-400">Or continue with email</span>
             </div>
           </div>
         </div>
 
         {/* Mode Tabs */}
-        <div className="flex items-center p-1 bg-[#18181B] rounded-lg border border-zinc-800 mb-6">
+        <div className="flex items-center p-1 bg-zinc-100 rounded-lg border border-zinc-200 mb-6">
           <button
             type="button"
             onClick={() => {
@@ -209,8 +211,8 @@ export const LoginPage: React.FC = () => {
             }}
             className={`flex-1 py-1.5 text-xs font-medium rounded-md transition ${
               mode === 'LOGIN'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-white text-zinc-900 shadow-sm font-semibold'
+                : 'text-zinc-500 hover:text-zinc-800'
             }`}
           >
             Sign In
@@ -223,8 +225,8 @@ export const LoginPage: React.FC = () => {
             }}
             className={`flex-1 py-1.5 text-xs font-medium rounded-md transition ${
               mode === 'REGISTER'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-white text-zinc-900 shadow-sm font-semibold'
+                : 'text-zinc-500 hover:text-zinc-800'
             }`}
           >
             Create Studio
@@ -233,8 +235,8 @@ export const LoginPage: React.FC = () => {
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-5 p-3 rounded-lg bg-red-950/40 border border-red-850/60 text-red-300 text-xs flex items-start space-x-2.5 animate-fadeIn">
-            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+          <div className="mb-5 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start space-x-2.5 animate-fadeIn">
+            <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
@@ -244,35 +246,35 @@ export const LoginPage: React.FC = () => {
           {mode === 'REGISTER' && (
             <>
               <div>
-                <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider mb-1.5">
                   Studio Name
                 </label>
                 <div className="relative">
-                  <Building className="w-4 h-4 text-zinc-500 absolute left-3.5 top-2.5" />
+                  <Building className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
                   <input
                     type="text"
                     required
                     value={studioName}
                     onChange={(e) => setStudioName(e.target.value)}
                     placeholder="e.g. Royal Weddings Photography"
-                    className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-zinc-500 outline-none transition"
+                    className="w-full bg-zinc-50 border border-zinc-200 focus:border-iris-600 focus:bg-white rounded-lg pl-10 pr-3.5 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider mb-1.5">
                   Your Full Name
                 </label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-zinc-500 absolute left-3.5 top-2.5" />
+                  <User className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
                   <input
                     type="text"
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="e.g. Rahul Sharma"
-                    className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-zinc-500 outline-none transition"
+                    className="w-full bg-zinc-50 border border-zinc-200 focus:border-iris-600 focus:bg-white rounded-lg pl-10 pr-3.5 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
                   />
                 </div>
               </div>
@@ -281,56 +283,56 @@ export const LoginPage: React.FC = () => {
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider">
+              <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider">
                 Email Address
               </label>
               {mode === 'LOGIN' && (
                 <button
                   type="button"
                   onClick={autofillDemo}
-                  className="text-[10px] text-iris-300 hover:underline font-medium"
+                  className="text-[10px] text-iris-600 hover:text-iris-700 hover:underline font-semibold"
                 >
                   Use Demo Credentials
                 </button>
               )}
             </div>
             <div className="relative">
-              <Mail className="w-4 h-4 text-zinc-500 absolute left-3.5 top-2.5" />
+              <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="photographer@frameflow.test"
-                className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-zinc-500 outline-none transition"
+                className="w-full bg-zinc-50 border border-zinc-200 focus:border-iris-600 focus:bg-white rounded-lg pl-10 pr-3.5 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
               />
             </div>
           </div>
 
           {mode === 'REGISTER' && (
             <div>
-              <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider mb-1.5">
                 Phone Number (Optional)
               </label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-zinc-500 absolute left-3.5 top-2.5" />
+                <Phone className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-zinc-500 outline-none transition"
+                  className="w-full bg-zinc-50 border border-zinc-200 focus:border-iris-600 focus:bg-white rounded-lg pl-10 pr-3.5 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
                 />
               </div>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider mb-1.5">
               Password {mode === 'REGISTER' && '(Min. 6 characters)'}
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-2.5" />
+              <Lock className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
               <input
                 type="password"
                 required
@@ -338,7 +340,7 @@ export const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#18181B] border border-zinc-800 focus:border-iris-500 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-zinc-500 outline-none transition"
+                className="w-full bg-zinc-50 border border-zinc-200 focus:border-iris-600 focus:bg-white rounded-lg pl-10 pr-3.5 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
               />
             </div>
           </div>
@@ -346,16 +348,16 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading || demoLoading}
-            className="w-full mt-2 py-2.5 px-4 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white font-medium text-xs transition flex items-center justify-center space-x-2 border border-zinc-700 shadow-sm disabled:opacity-50"
+            className="w-full mt-2 py-2.5 px-4 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white font-medium text-xs transition flex items-center justify-center space-x-2 shadow-sm disabled:opacity-50"
           >
             <span>{loading ? 'Processing...' : mode === 'LOGIN' ? 'Sign In to Studio' : 'Create Studio Account'}</span>
-            <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
+            <ArrowRight className="w-3.5 h-3.5 text-zinc-300" />
           </button>
         </form>
       </div>
 
       {/* Footer */}
-      <div className="pb-6 text-center text-xs text-zinc-500 relative z-10">
+      <div className="pb-6 text-center text-xs text-zinc-400 relative z-10">
         FrameFlow Photography Platform • Monochrome interface with Iris accent
       </div>
     </div>

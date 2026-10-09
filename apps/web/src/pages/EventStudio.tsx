@@ -397,27 +397,27 @@ export const EventStudio: React.FC = () => {
   const getCategoryColor = (type: string) => {
     switch (type?.toLowerCase()) {
       case 'wedding':
-        return 'text-zinc-200 bg-zinc-800 border-zinc-700';
+        return 'text-zinc-800 bg-zinc-100 border-zinc-200';
       case 'pre-wedding':
-        return 'text-iris-300 bg-iris-500/10 border-iris-500/30';
+        return 'text-iris-700 bg-iris-50 border-iris-200';
       case 'sangeet':
-        return 'text-purple-300 bg-purple-500/10 border-purple-500/30';
+        return 'text-purple-700 bg-purple-50 border-purple-200';
       case 'corporate':
-        return 'text-blue-300 bg-blue-500/10 border-blue-500/30';
+        return 'text-blue-700 bg-blue-50 border-blue-200';
       default:
-        return 'text-zinc-400 bg-zinc-800 border-zinc-700';
+        return 'text-zinc-600 bg-zinc-100 border-zinc-200';
     }
   };
 
   return (
     <div className="space-y-8 animate-fadeIn pb-24">
       {/* Editorial Studio Hero Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-zinc-800/80">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-zinc-200">
         <div className="flex items-start space-x-4">
           <Link
             to="/"
             title="Return to Dashboard"
-            className="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-850 hover:border-zinc-700 transition shrink-0 mt-1"
+            className="p-2.5 rounded-lg bg-white border border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition shrink-0 mt-1 shadow-xs"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
@@ -427,9 +427,9 @@ export const EventStudio: React.FC = () => {
               <span className={`text-[10px] uppercase font-medium tracking-wider px-2.5 py-0.5 rounded-full border ${getCategoryColor(event.eventType)}`}>
                 {event.eventType}
               </span>
-              <span className="text-zinc-600">•</span>
-              <span className="text-xs text-zinc-400 flex items-center space-x-1">
-                <Clock className="w-3.5 h-3.5 text-zinc-500" />
+              <span className="text-zinc-300">•</span>
+              <span className="text-xs text-zinc-500 flex items-center space-x-1">
+                <Clock className="w-3.5 h-3.5 text-zinc-400" />
                 <span>
                   {new Date(event.eventDate).toLocaleDateString('en-IN', {
                     day: 'numeric',
@@ -438,32 +438,32 @@ export const EventStudio: React.FC = () => {
                   })}
                 </span>
               </span>
-              <span className="text-zinc-600">•</span>
-              <span className="text-xs text-zinc-400">
-                Client: <strong className="text-zinc-200 font-medium">{event.clientName}</strong>
+              <span className="text-zinc-300">•</span>
+              <span className="text-xs text-zinc-500">
+                Client: <strong className="text-zinc-800 font-medium">{event.clientName}</strong>
               </span>
               {event.maxSelections && (
                 <>
-                  <span className="text-zinc-600">•</span>
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-iris-500/10 border border-iris-500/20 text-iris-300 font-medium">
+                  <span className="text-zinc-300">•</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-iris-50 border border-iris-200 text-iris-700 font-medium">
                     🎯 Max {event.maxSelections} Photos
                   </span>
                 </>
               )}
               {event.enableWatermark && (
                 <>
-                  <span className="text-zinc-600">•</span>
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300 font-medium">
+                  <span className="text-zinc-300">•</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-700 font-medium">
                     🛡️ Watermarked Proofs
                   </span>
                 </>
               )}
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-normal text-white tracking-tight font-serif">
+            <h1 className="text-3xl sm:text-4xl font-normal text-zinc-900 tracking-tight font-serif">
               {event.title}
             </h1>
-            <p className="text-xs text-zinc-400 mt-1">
+            <p className="text-xs text-zinc-500 mt-1">
               Curated photoshoot proofing portal & background streaming ingestion engine.
             </p>
           </div>
@@ -486,15 +486,15 @@ export const EventStudio: React.FC = () => {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 text-xs font-medium transition"
+            className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-white hover:bg-zinc-50 text-zinc-700 border border-zinc-200 text-xs font-medium transition shadow-xs"
           >
-            <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+            <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
             <span>WhatsApp Invite</span>
           </a>
 
           <button
             onClick={() => setShowDeleteModal(true)}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-zinc-900 hover:bg-red-950/40 border border-zinc-800 hover:border-red-900 text-zinc-400 hover:text-red-400 text-xs font-medium transition"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-white hover:bg-red-50 border border-zinc-200 hover:border-red-200 text-zinc-500 hover:text-red-600 text-xs font-medium transition shadow-xs"
             title="Delete this event and all uploaded photos"
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -505,27 +505,27 @@ export const EventStudio: React.FC = () => {
 
       {/* Quick Metrics Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-[#121214] border border-zinc-800">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+        <div className="p-4 rounded-xl bg-white border border-zinc-200 shadow-xs">
+          <div className="flex items-center justify-between text-xs text-zinc-500 mb-1">
             <span>Total Photos</span>
-            <Camera className="w-3.5 h-3.5 text-zinc-500" />
+            <Camera className="w-3.5 h-3.5 text-zinc-400" />
           </div>
-          <p className="text-2xl font-normal text-white font-mono">{event.mediaItems.length}</p>
-          <span className="text-[10px] text-zinc-500">In gallery catalog</span>
+          <p className="text-2xl font-normal text-zinc-900 font-mono">{event.mediaItems.length}</p>
+          <span className="text-[10px] text-zinc-400">In gallery catalog</span>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#121214] border border-zinc-800">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+        <div className="p-4 rounded-xl bg-white border border-zinc-200 shadow-xs">
+          <div className="flex items-center justify-between text-xs text-zinc-500 mb-1">
             <span>Client Selections</span>
-            <Heart className={`w-3.5 h-3.5 ${selectedCount > 0 ? 'text-iris-400 fill-current' : 'text-zinc-500'}`} />
+            <Heart className={`w-3.5 h-3.5 ${selectedCount > 0 ? 'text-iris-600 fill-current' : 'text-zinc-400'}`} />
           </div>
           <div className="flex items-baseline space-x-1.5">
-            <p className="text-2xl font-normal text-iris-400 font-mono">{selectedCount}</p>
+            <p className="text-2xl font-normal text-iris-600 font-mono">{selectedCount}</p>
             {event.maxSelections && (
-              <span className="text-xs text-zinc-400 font-mono">/ {event.maxSelections} limit</span>
+              <span className="text-xs text-zinc-500 font-mono">/ {event.maxSelections} limit</span>
             )}
           </div>
-          <span className="text-[10px] text-zinc-500">
+          <span className="text-[10px] text-zinc-400">
             {isSubmitted
               ? 'Selection submitted'
               : event.maxSelections
@@ -534,56 +534,56 @@ export const EventStudio: React.FC = () => {
           </span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+        <div className="p-4 rounded-xl bg-white border border-zinc-200 shadow-xs">
+          <div className="flex items-center justify-between text-xs text-zinc-500 mb-1">
             <span>Storage Used</span>
-            <HardDrive className="w-4 h-4 text-zinc-500" />
+            <HardDrive className="w-4 h-4 text-zinc-400" />
           </div>
-          <p className="text-2xl font-bold text-white font-mono">{totalEventMB} MB</p>
-          <span className="text-[10px] text-emerald-400 font-medium">Cloudflare R2 (0 Egress)</span>
+          <p className="text-2xl font-normal text-zinc-900 font-mono">{totalEventMB} MB</p>
+          <span className="text-[10px] text-emerald-600 font-medium">Cloudflare R2 (0 Egress)</span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+        <div className="p-4 rounded-xl bg-white border border-zinc-200 shadow-xs">
+          <div className="flex items-center justify-between text-xs text-zinc-500 mb-1">
             <span>Access PIN</span>
-            <KeyRound className="w-4 h-4 text-zinc-500" />
+            <KeyRound className="w-4 h-4 text-zinc-400" />
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-extrabold text-white font-mono tracking-widest">
+            <span className="text-2xl font-normal text-zinc-900 font-mono tracking-widest">
               {event.pin || '••••'}
             </span>
             <button
               onClick={() => copyToClipboard(event.pin || '0000', 'stat-pin')}
-              className="px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] text-zinc-300 font-medium transition"
+              className="px-2 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-[10px] text-zinc-700 font-medium transition"
             >
               {copiedKey === 'stat-pin' ? 'Copied' : 'Copy'}
             </button>
           </div>
-          <span className="text-[10px] text-zinc-500">Bcrypt hashed (0000 default)</span>
+          <span className="text-[10px] text-zinc-400">Bcrypt hashed (0000 default)</span>
         </div>
       </div>
 
       {/* Client Submission Banner (if submitted) */}
       {isSubmitted && (
-        <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-950/50 via-[#121214] to-[#121214] border border-emerald-800/60 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-50 via-white to-white border border-emerald-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start space-x-4">
-            <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shrink-0">
+            <div className="p-3 rounded-xl bg-emerald-100 text-emerald-700 border border-emerald-200 shrink-0">
               <CheckCircle className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-xs uppercase font-medium tracking-wider text-emerald-400">
+                <span className="text-xs uppercase font-medium tracking-wider text-emerald-700">
                   Client Selection Finalized
                 </span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-900/60 text-emerald-300 font-mono font-medium">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono font-medium">
                   {selectedCount} photos picked
                 </span>
               </div>
-              <h3 className="text-xl font-normal text-white mt-1 font-serif">
+              <h3 className="text-xl font-normal text-zinc-900 mt-1 font-serif">
                 {event.clientName} has confirmed their album choices
               </h3>
               {round1?.clientNotes && (
-                <div className="mt-2.5 p-3 rounded-lg bg-[#18181B] border border-zinc-800 text-xs text-zinc-300 italic">
+                <div className="mt-2.5 p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs text-zinc-700 italic">
                   "{round1.clientNotes}"
                 </div>
               )}
@@ -625,7 +625,7 @@ export const EventStudio: React.FC = () => {
             <a
               href={`/api/events/${event.id}/export/csv`}
               download
-              className="px-4 py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition flex items-center space-x-1.5"
+              className="px-4 py-2.5 rounded-lg bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium border border-zinc-200 transition shadow-xs flex items-center space-x-1.5"
               title="Download selected filenames as CSV"
             >
               <Download className="w-4 h-4 text-zinc-400" />
@@ -635,13 +635,13 @@ export const EventStudio: React.FC = () => {
             {/* Copy Lightroom Search Query */}
             <button
               onClick={copyLightroomQuery}
-              className="px-4 py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition flex items-center space-x-1.5"
+              className="px-4 py-2.5 rounded-lg bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium border border-zinc-200 transition shadow-xs flex items-center space-x-1.5"
               title="Copy comma-separated filenames for Adobe Lightroom or Capture One search bar"
             >
               {copiedKey === 'lightroom' ? (
                 <>
-                  <CheckCircle className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-400">Query Copied!</span>
+                  <CheckCircle className="w-4 h-4 text-emerald-600" />
+                  <span className="text-emerald-600">Query Copied!</span>
                 </>
               ) : (
                 <>
@@ -657,27 +657,27 @@ export const EventStudio: React.FC = () => {
       {/* Share & PIN Access Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Security PIN Card */}
-        <div className="p-5 rounded-xl bg-[#121214] border border-zinc-800 flex flex-col justify-between">
+        <div className="p-5 rounded-xl bg-white border border-zinc-200 flex flex-col justify-between shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400 uppercase tracking-wider">
+            <span className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
               Client Security PIN
             </span>
             <KeyRound className="w-4 h-4 text-zinc-400" />
           </div>
 
           <div className="my-4 flex items-center justify-between">
-            <span className="font-mono text-3xl font-normal text-white tracking-widest">
+            <span className="font-mono text-3xl font-normal text-zinc-900 tracking-widest">
               {event.pin || '••••'}
             </span>
             {event.pin && (
               <button
                 onClick={() => copyToClipboard(event.pin!, 'pin')}
-                className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs font-medium transition flex items-center space-x-1.5"
+                className="px-3 py-1.5 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium transition flex items-center space-x-1.5"
               >
                 {copiedKey === 'pin' ? (
                   <>
-                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-emerald-400 font-medium">Copied!</span>
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="text-emerald-600 font-medium">Copied!</span>
                   </>
                 ) : (
                   <>
@@ -689,14 +689,14 @@ export const EventStudio: React.FC = () => {
             )}
           </div>
           <p className="text-[11px] text-zinc-500">
-            Hashed with bcrypt. Fast test PIN <code className="text-zinc-300">0000</code> is supported.
+            Hashed with bcrypt. Fast test PIN <code className="text-zinc-700 font-medium">0000</code> is supported.
           </p>
         </div>
 
         {/* Gallery Share Link Card */}
-        <div className="p-5 rounded-xl bg-[#121214] border border-zinc-800 flex flex-col justify-between md:col-span-2">
+        <div className="p-5 rounded-xl bg-white border border-zinc-200 flex flex-col justify-between md:col-span-2 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400 uppercase tracking-wider">
+            <span className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
               Client Proofing Portal Link
             </span>
             <Share2 className="w-4 h-4 text-zinc-400" />
@@ -707,11 +707,11 @@ export const EventStudio: React.FC = () => {
               type="text"
               readOnly
               value={galleryUrl}
-              className="flex-1 bg-[#18181B] border border-zinc-800 rounded-lg px-3.5 py-2.5 text-xs font-mono text-zinc-300 outline-none select-all focus:border-iris-500"
+              className="flex-1 bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2.5 text-xs font-mono text-zinc-800 outline-none select-all focus:border-iris-600"
             />
             <button
               onClick={() => copyToClipboard(galleryUrl, 'gallery-link')}
-              className="px-4 py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium transition shrink-0 flex items-center space-x-1.5"
+              className="px-4 py-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium transition shrink-0 flex items-center space-x-1.5 shadow-xs"
             >
               {copiedKey === 'gallery-link' ? (
                 <>
@@ -736,7 +736,7 @@ export const EventStudio: React.FC = () => {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition"
+                className="inline-flex items-center space-x-1.5 text-xs text-emerald-600 hover:text-emerald-700 font-semibold transition"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Send WhatsApp Invite</span>
@@ -757,8 +757,8 @@ export const EventStudio: React.FC = () => {
         onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center cursor-pointer transition-all duration-200 group relative overflow-hidden ${
           isDraggingOver
-            ? 'border-iris-500 bg-iris-500/10'
-            : 'border-zinc-800 hover:border-zinc-700 bg-[#121214] hover:bg-[#18181B]'
+            ? 'border-iris-500 bg-iris-50'
+            : 'border-zinc-300 hover:border-zinc-400 bg-white hover:bg-zinc-50 shadow-xs'
         }`}
       >
         <input
@@ -770,25 +770,25 @@ export const EventStudio: React.FC = () => {
           className="hidden"
         />
 
-        <div className="w-12 h-12 rounded-xl bg-zinc-850 text-zinc-300 border border-zinc-750 flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition duration-200">
-          <Upload className="w-6 h-6 text-zinc-400 group-hover:text-white" />
+        <div className="w-12 h-12 rounded-xl bg-zinc-100 text-zinc-600 border border-zinc-200 flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition duration-200">
+          <Upload className="w-6 h-6 text-zinc-500 group-hover:text-zinc-900" />
         </div>
 
-        <h3 className="text-xl font-normal text-white tracking-tight font-serif">
+        <h3 className="text-xl font-normal text-zinc-900 tracking-tight font-serif">
           {isDraggingOver ? 'Drop Photos Now to Upload' : 'Drop Event Photos Here or Click to Browse'}
         </h3>
-        <p className="text-xs text-zinc-400 mt-1 max-w-lg mx-auto">
+        <p className="text-xs text-zinc-500 mt-1 max-w-lg mx-auto">
           High-resolution photo batches stream directly to zero-egress cloud storage with automated WebP preview processing.
         </p>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-          <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700/60">
+          <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200">
             JPG, PNG, WebP supported
           </span>
-          <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-iris-500/10 text-iris-300 border border-iris-500/20">
+          <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-iris-50 text-iris-700 border border-iris-200">
             Worker Resizing (400px + 1600px WebP)
           </span>
-          <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-zinc-850 text-emerald-400 border border-emerald-900/40">
+          <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
             Zero Egress Storage
           </span>
         </div>
@@ -796,27 +796,27 @@ export const EventStudio: React.FC = () => {
 
       {/* Live Upload Queue Tracker */}
       {uploadQueue.length > 0 && (
-        <div className="bg-[#121214] border border-zinc-800 rounded-xl overflow-hidden shadow-lg">
-          <div className="px-5 py-3 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/80">
+        <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-xs">
+          <div className="px-5 py-3 border-b border-zinc-200 flex items-center justify-between bg-zinc-50">
             <div className="flex items-center space-x-2">
-              <h3 className="text-xs font-medium text-white">Live Upload Queue</h3>
-              <span className="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-full font-mono font-medium">
+              <h3 className="text-xs font-medium text-zinc-900">Live Upload Queue</h3>
+              <span className="text-xs bg-zinc-200 text-zinc-800 px-2 py-0.5 rounded-full font-mono font-medium">
                 {uploadQueue.length} files
               </span>
             </div>
             {isUploading && (
-              <span className="flex items-center space-x-2 text-xs text-iris-400 font-medium animate-pulse">
+              <span className="flex items-center space-x-2 text-xs text-iris-600 font-medium animate-pulse">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                 <span>Streaming Direct to Storage...</span>
               </span>
             )}
           </div>
 
-          <div className="divide-y divide-zinc-800/60 max-h-72 overflow-y-auto">
+          <div className="divide-y divide-zinc-100 max-h-72 overflow-y-auto">
             {uploadQueue.map((item) => (
-              <div key={item.id} className="p-3 px-5 flex items-center justify-between text-xs hover:bg-zinc-850/40 transition">
+              <div key={item.id} className="p-3 px-5 flex items-center justify-between text-xs hover:bg-zinc-50 transition">
                 <div className="truncate max-w-sm">
-                  <p className="font-medium text-white truncate font-mono">{item.filename}</p>
+                  <p className="font-medium text-zinc-900 truncate font-mono">{item.filename}</p>
                   <p className="text-[11px] text-zinc-500 font-mono">{(item.size / (1024 * 1024)).toFixed(2)} MB</p>
                 </div>
 
@@ -825,25 +825,25 @@ export const EventStudio: React.FC = () => {
                     <span className="text-zinc-500 text-xs">Presigning URL...</span>
                   )}
                   {item.status === 'uploading' && (
-                    <span className="text-amber-400 font-medium flex items-center space-x-1.5">
+                    <span className="text-amber-600 font-medium flex items-center space-x-1.5">
                       <Upload className="w-3.5 h-3.5 animate-pulse" />
                       <span>Uploading ({item.progress}%)</span>
                     </span>
                   )}
                   {item.status === 'processing' && (
-                    <span className="text-iris-300 font-medium flex items-center space-x-1.5">
+                    <span className="text-iris-700 font-medium flex items-center space-x-1.5">
                       <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                       <span>Resizing WebP</span>
                     </span>
                   )}
                   {item.status === 'ready' && (
-                    <span className="text-emerald-400 font-medium flex items-center space-x-1.5">
+                    <span className="text-emerald-600 font-medium flex items-center space-x-1.5">
                       <CheckCircle className="w-3.5 h-3.5" />
                       <span>WebP Ready</span>
                     </span>
                   )}
                   {item.status === 'failed' && (
-                    <span className="text-red-400 font-medium">{item.error || 'Failed'}</span>
+                    <span className="text-red-500 font-medium">{item.error || 'Failed'}</span>
                   )}
                 </div>
               </div>
@@ -856,8 +856,8 @@ export const EventStudio: React.FC = () => {
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <h2 className="text-2xl font-bold text-white tracking-tight font-serif">Event Photos</h2>
-            <span className="text-xs bg-zinc-850 text-zinc-300 px-3 py-1 rounded-full font-mono border border-zinc-700/60 font-semibold">
+            <h2 className="text-2xl font-bold text-zinc-900 tracking-tight font-serif">Event Photos</h2>
+            <span className="text-xs bg-zinc-100 text-zinc-700 px-3 py-1 rounded-full font-mono border border-zinc-200 font-medium">
               {filteredPhotos.length} / {event.mediaItems.length} photos
             </span>
           </div>
@@ -866,18 +866,18 @@ export const EventStudio: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3">
             {/* Search Input */}
             <div className="relative">
-              <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search photo filename..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-[#121214] border border-zinc-800 rounded-lg pl-9 pr-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-iris-500 transition w-44 sm:w-56"
+                className="bg-white border border-zinc-200 rounded-lg pl-9 pr-3 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-iris-600 transition w-44 sm:w-56 shadow-xs"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -885,13 +885,13 @@ export const EventStudio: React.FC = () => {
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex items-center space-x-1 bg-[#121214] p-1 rounded-lg border border-zinc-800">
+            <div className="flex items-center space-x-1 bg-zinc-100 p-1 rounded-lg border border-zinc-200">
               <button
                 onClick={() => setFilterMode('ALL')}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition ${
                   filterMode === 'ALL'
-                    ? 'bg-zinc-800 text-white shadow-sm'
-                    : 'text-zinc-400 hover:text-white'
+                    ? 'bg-white text-zinc-900 shadow-xs'
+                    : 'text-zinc-600 hover:text-zinc-900'
                 }`}
               >
                 All ({event.mediaItems.length})
@@ -900,8 +900,8 @@ export const EventStudio: React.FC = () => {
                 onClick={() => setFilterMode('SELECTED')}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition flex items-center space-x-1.5 ${
                   filterMode === 'SELECTED'
-                    ? 'bg-iris-600 text-white shadow-sm'
-                    : 'text-zinc-400 hover:text-white'
+                    ? 'bg-iris-600 text-white shadow-xs'
+                    : 'text-zinc-600 hover:text-zinc-900'
                 }`}
               >
                 <Heart className={`w-3 h-3 ${selectedCount > 0 ? 'fill-current' : ''}`} />
@@ -910,12 +910,12 @@ export const EventStudio: React.FC = () => {
             </div>
 
             {/* Grid density switcher (Desktop) */}
-            <div className="hidden md:flex items-center space-x-1 bg-[#121214] p-1 rounded-lg border border-zinc-800">
+            <div className="hidden md:flex items-center space-x-1 bg-zinc-100 p-1 rounded-lg border border-zinc-200">
               <button
                 onClick={() => setGridCols(3)}
                 title="3 Columns (Large)"
                 className={`p-1.5 rounded-md transition ${
-                  gridCols === 3 ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'
+                  gridCols === 3 ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-900'
                 }`}
               >
                 <Grid3X3 className="w-4 h-4" />
@@ -924,7 +924,7 @@ export const EventStudio: React.FC = () => {
                 onClick={() => setGridCols(4)}
                 title="4 Columns"
                 className={`p-1.5 rounded-md transition ${
-                  gridCols === 4 ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'
+                  gridCols === 4 ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-900'
                 }`}
               >
                 <LayoutGrid className="w-4 h-4" />
@@ -934,9 +934,9 @@ export const EventStudio: React.FC = () => {
         </div>
 
         {filteredPhotos.length === 0 ? (
-          <div className="text-center py-20 bg-[#121214] rounded-xl border border-zinc-800/80">
-            <Camera className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
-            <p className="text-base font-normal text-zinc-300 font-serif">
+          <div className="text-center py-20 bg-white rounded-xl border border-zinc-200 shadow-xs">
+            <Camera className="w-10 h-10 text-zinc-400 mx-auto mb-3" />
+            <p className="text-base font-normal text-zinc-900 font-serif">
               {searchQuery ? 'No photos match your search' : 'No photos in this view'}
             </p>
             <p className="text-xs text-zinc-500 mt-1 max-w-sm mx-auto">
@@ -965,10 +965,10 @@ export const EventStudio: React.FC = () => {
                 <div
                   key={photo.id}
                   onClick={() => setLightboxIndex(idx)}
-                  className={`group relative aspect-square bg-[#121214] rounded-[6px] overflow-hidden border cursor-pointer shadow-sm transition-all duration-200 ${
+                  className={`group relative aspect-square bg-zinc-100 rounded-[6px] overflow-hidden border cursor-pointer shadow-xs transition-all duration-200 ${
                     isPicked
-                      ? 'border-iris-500/80 ring-2 ring-iris-500/30'
-                      : 'border-zinc-800/80 hover:border-zinc-700'
+                      ? 'border-iris-600 ring-2 ring-iris-600/30'
+                      : 'border-zinc-200 hover:border-zinc-300'
                   }`}
                 >
                   {thumbUrl ? (
@@ -979,9 +979,9 @@ export const EventStudio: React.FC = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-[#121214]">
-                      <RefreshCw className="w-4 h-4 text-iris-400 animate-spin mb-1.5" />
-                      <span className="text-[10px] text-zinc-400">Processing...</span>
+                    <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-zinc-100">
+                      <RefreshCw className="w-4 h-4 text-iris-600 animate-spin mb-1.5" />
+                      <span className="text-[10px] text-zinc-500">Processing...</span>
                     </div>
                   )}
 
@@ -1010,7 +1010,7 @@ export const EventStudio: React.FC = () => {
                     <p className="text-xs font-medium text-white truncate font-mono">
                       {photo.originalFilename}
                     </p>
-                    <div className="flex items-center justify-between mt-1 text-[10px] text-zinc-400">
+                    <div className="flex items-center justify-between mt-1 text-[10px] text-zinc-300">
                       <span>
                         {photo.width && photo.height
                           ? `${photo.width} × ${photo.height}`
@@ -1152,30 +1152,30 @@ export const EventStudio: React.FC = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && event && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-fadeIn">
-          <div className="bg-[#121214] border border-red-900/40 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
-            <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-white border border-zinc-200 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
+            <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-100 text-red-600 flex items-center justify-center mb-4">
               <AlertTriangle className="w-5 h-5" />
             </div>
 
-            <h3 className="text-xl font-normal text-white font-serif mb-2">Delete Event Gallery?</h3>
-            <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
-              Are you sure you want to delete <strong className="text-white">"{event.title}"</strong>?
-              This will permanently delete this event, all client selections, and all <strong className="text-white">{event.mediaItems.length} photos</strong> from your S3 storage bucket.
+            <h3 className="text-xl font-normal text-zinc-900 font-serif mb-2">Delete Event Gallery?</h3>
+            <p className="text-xs text-zinc-600 mb-6 leading-relaxed">
+              Are you sure you want to delete <strong className="text-zinc-900">"{event.title}"</strong>?
+              This will permanently delete this event, all client selections, and all <strong className="text-zinc-900">{event.mediaItems.length} photos</strong> from your S3 storage bucket.
             </p>
 
             <div className="flex items-center space-x-3 justify-end">
               <button
                 onClick={() => setShowDeleteModal(false)}
                 disabled={isDeleting}
-                className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium transition"
+                className="px-4 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteEvent}
                 disabled={isDeleting}
-                className="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-medium shadow-md shadow-red-900/40 transition flex items-center space-x-2 disabled:opacity-50"
+                className="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-medium shadow-sm transition flex items-center space-x-2 disabled:opacity-50"
               >
                 {isDeleting ? (
                   <>
