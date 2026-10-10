@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import {
   Calendar,
   Camera,
@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { CreateEventModal } from '../components/CreateEventModal';
 import { StudioSettingsModal } from '../components/StudioSettingsModal';
+import { DashboardLayoutContextType } from '../components/DashboardLayout';
 import { useAuth } from '../context/AuthContext';
 
 interface EventItem {
@@ -44,15 +45,25 @@ interface EventItem {
 
 export const AgencyDashboard: React.FC = () => {
   const { authFetch, user } = useAuth();
+  const outletCtx = useOutletContext<DashboardLayoutContextType | undefined>();
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('ALL');
+  const [localFilter, setLocalFilter] = useState('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [eventToDelete, setEventToDelete] = useState<EventItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const selectedFilter = outletCtx?.activeFilter ?? localFilter;
+  const setSelectedFilter = (f: string) => {
+    if (outletCtx?.setActiveFilter) {
+      outletCtx.setActiveFilter(f);
+    } else {
+      setLocalFilter(f);
+    }
+  };
 
   const handleDeleteEvent = async (event: EventItem) => {
     setIsDeleting(true);
@@ -87,7 +98,7 @@ export const AgencyDashboard: React.FC = () => {
 
   useEffect(() => {
     loadEvents();
-  }, []);
+  }, [outletCtx?.refreshKey]);
 
   const copyToClipboard = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
@@ -157,14 +168,14 @@ export const AgencyDashboard: React.FC = () => {
 
           <div className="flex items-center space-x-3 self-start lg:self-auto">
             <button
-              onClick={() => setIsSettingsOpen(true)}
+              onClick={() => (outletCtx ? outletCtx.openSettingsModal() : setIsSettingsOpen(true))}
               className="flex items-center space-x-2 px-4 py-2.5 rounded-lg bg-white hover:bg-zinc-50 text-zinc-700 border border-zinc-200 text-xs font-medium transition shadow-xs"
             >
               <Settings className="w-4 h-4 text-zinc-500" />
               <span>Studio Branding</span>
             </button>
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => (outletCtx ? outletCtx.openCreateEventModal() : setIsModalOpen(true))}
               className="flex items-center space-x-2 px-4 py-2.5 rounded-lg bg-iris-600 hover:bg-iris-500 active:bg-iris-700 text-white font-medium text-xs shadow-sm shadow-iris-600/30 transition"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />

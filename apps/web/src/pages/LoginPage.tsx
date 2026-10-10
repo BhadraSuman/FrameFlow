@@ -242,9 +242,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex selection:bg-iris-600 selection:text-white">
+    <div className="h-screen w-full bg-[#FAFAFA] flex overflow-hidden selection:bg-iris-600 selection:text-white">
       {/* LEFT COLUMN: Editorial Studio Visual & Social Proof (Visible on Desktop lg+) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-zinc-950 text-white flex-col justify-between p-12 overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 h-full relative bg-zinc-950 text-white flex-col justify-between p-8 xl:p-12 overflow-hidden">
         {/* Atmospheric Background with Subtle Photography Tone */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity scale-105"
@@ -261,98 +261,98 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
         {/* Brand Top Bar */}
         <div className="relative z-10 flex items-center justify-between">
           <Link to="/" className="inline-flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-xl bg-iris-600 flex items-center justify-center text-white shadow-md shadow-iris-600/40 group-hover:bg-iris-500 transition-colors">
-              <Camera className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-iris-600 flex items-center justify-center text-white shadow-md shadow-iris-600/40 group-hover:bg-iris-500 transition-colors">
+              <Camera className="w-4 h-4" />
             </div>
-            <span className="text-2xl font-normal tracking-tight text-white font-serif">FrameFlow</span>
+            <span className="text-xl font-normal tracking-tight text-white font-serif">FrameFlow</span>
           </Link>
 
           <div className="inline-flex items-center space-x-2 text-zinc-300 text-xs font-medium px-3 py-1 rounded-full bg-zinc-900/80 border border-zinc-800 backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5 text-iris-400" />
+            <Sparkles className="w-3 h-3 text-iris-400" />
             <span>Studio OS v2.0</span>
           </div>
         </div>
 
         {/* Center Editorial Showcase */}
-        <div className="relative z-10 my-auto py-12 max-w-lg">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-iris-500/10 border border-iris-500/20 text-iris-300 text-xs font-medium mb-6">
-            <Shield className="w-3.5 h-3.5" />
+        <div className="relative z-10 my-auto py-4 max-w-lg">
+          <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-iris-500/10 border border-iris-500/20 text-iris-300 text-[11px] font-medium mb-4">
+            <Shield className="w-3 h-3" />
             <span>Built for High-Volume Wedding & Event Studios</span>
           </div>
 
-          <h2 className="text-3xl xl:text-4xl font-normal font-serif text-white tracking-tight leading-tight">
+          <h2 className="text-2xl xl:text-3xl font-normal font-serif text-white tracking-tight leading-snug">
             "We cut our client album selection turnaround from 3 weeks to 48 hours."
           </h2>
 
-          <p className="mt-6 text-sm text-zinc-300 leading-relaxed font-light">
+          <p className="mt-3 text-xs xl:text-sm text-zinc-300 leading-relaxed font-light">
             Couples tap hearts on their smartphones with live quota limits. You export ready-to-filter filenames straight into Adobe Lightroom Classic in one click.
           </p>
 
           {/* Testimonial Author */}
-          <div className="mt-8 flex items-center space-x-4 pt-6 border-t border-zinc-800/80">
-            <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-iris-600 to-indigo-400 p-0.5">
-              <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center text-xs font-semibold text-white">
+          <div className="mt-5 flex items-center space-x-3 pt-4 border-t border-zinc-800/80">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-iris-600 to-indigo-400 p-0.5 shrink-0">
+              <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center text-[10px] font-semibold text-white">
                 KM
               </div>
             </div>
             <div>
-              <div className="text-sm font-medium text-white flex items-center space-x-2">
+              <div className="text-xs font-medium text-white flex items-center space-x-2">
                 <span>Karan & Meera Visuals</span>
                 <div className="flex text-amber-400">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 fill-current" />
+                    <Star key={i} className="w-2.5 h-2.5 fill-current" />
                   ))}
                 </div>
               </div>
-              <div className="text-xs text-zinc-400">Luxury Wedding Photography Studio, Mumbai</div>
+              <div className="text-[11px] text-zinc-400">Luxury Wedding Photography Studio, Mumbai</div>
             </div>
           </div>
         </div>
 
         {/* Bottom Platform Metrics */}
-        <div className="relative z-10 grid grid-cols-3 gap-4 pt-6 border-t border-zinc-800/80 text-left">
+        <div className="relative z-10 grid grid-cols-3 gap-3 pt-4 border-t border-zinc-800/80 text-left">
           <div>
-            <div className="text-xl font-serif text-white">100k+</div>
-            <div className="text-[11px] text-zinc-400 mt-0.5">Photos Selected</div>
+            <div className="text-lg font-serif text-white">100k+</div>
+            <div className="text-[10px] text-zinc-400">Photos Selected</div>
           </div>
           <div>
-            <div className="text-xl font-serif text-white">1-Click</div>
-            <div className="text-[11px] text-zinc-400 mt-0.5">Lightroom Export</div>
+            <div className="text-lg font-serif text-white">1-Click</div>
+            <div className="text-[10px] text-zinc-400">Lightroom Export</div>
           </div>
           <div>
-            <div className="text-xl font-serif text-white">Zero</div>
-            <div className="text-[11px] text-zinc-400 mt-0.5">Egress Fees</div>
+            <div className="text-lg font-serif text-white">Zero</div>
+            <div className="text-[10px] text-zinc-400">Egress Fees</div>
           </div>
         </div>
       </div>
 
       {/* RIGHT COLUMN: Authentication Form (Mobile & Desktop) */}
-      <div className="flex-1 flex flex-col justify-between p-6 sm:p-10 lg:p-12 overflow-y-auto">
+      <div className="flex-1 h-full flex flex-col justify-between p-4 sm:p-6 lg:p-8 xl:p-10 overflow-y-auto lg:overflow-y-hidden">
         {/* Top Header Link */}
-        <div className="flex items-center justify-between pb-6">
+        <div className="flex items-center justify-between shrink-0">
           <Link
             to="/"
-            className="inline-flex items-center space-x-2 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition"
+            className="inline-flex items-center space-x-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition"
           >
             <span>← Back to frameflow.app</span>
           </Link>
 
           <div className="lg:hidden flex items-center space-x-2">
-            <div className="w-7 h-7 rounded-lg bg-iris-600 flex items-center justify-center text-white">
-              <Camera className="w-3.5 h-3.5" />
+            <div className="w-6 h-6 rounded-lg bg-iris-600 flex items-center justify-center text-white">
+              <Camera className="w-3 h-3" />
             </div>
-            <span className="font-serif text-lg text-zinc-900">FrameFlow</span>
+            <span className="font-serif text-base text-zinc-900">FrameFlow</span>
           </div>
         </div>
 
         {/* Center Auth Card */}
-        <div className="w-full max-w-md mx-auto my-auto py-4">
+        <div className="w-full max-w-md mx-auto my-auto py-2">
           {/* Headline */}
-          <div className="mb-6">
-            <h1 className="text-2xl sm:text-3xl font-normal font-serif text-zinc-900 tracking-tight">
+          <div className="mb-3.5">
+            <h1 className="text-xl sm:text-2xl font-normal font-serif text-zinc-900 tracking-tight">
               {mode === 'LOGIN' ? 'Welcome back to your studio' : 'Create your photographer studio'}
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-500 mt-1.5">
+            <p className="text-xs text-zinc-500 mt-1">
               {mode === 'LOGIN'
                 ? 'Sign in to manage client galleries, view selections, and export.'
                 : 'Start your studio with 5 GB free cloud storage and PIN proofing.'}
@@ -360,13 +360,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
           </div>
 
           {/* Mode Switcher Tabs */}
-          <div className="flex items-center p-1 bg-zinc-100 rounded-xl border border-zinc-200 mb-6">
+          <div className="flex items-center p-1 bg-zinc-100 rounded-xl border border-zinc-200 mb-3.5">
             <button
               type="button"
               onClick={() => switchMode('LOGIN')}
-              className={`flex-1 py-2 text-xs font-medium rounded-lg transition ${
+              className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition ${
                 mode === 'LOGIN'
-                  ? 'bg-white text-zinc-900 shadow-sm font-semibold'
+                  ? 'bg-white text-zinc-900 shadow-xs font-semibold'
                   : 'text-zinc-500 hover:text-zinc-900'
               }`}
             >
@@ -375,9 +375,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
             <button
               type="button"
               onClick={() => switchMode('REGISTER')}
-              className={`flex-1 py-2 text-xs font-medium rounded-lg transition ${
+              className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition ${
                 mode === 'REGISTER'
-                  ? 'bg-white text-zinc-900 shadow-sm font-semibold'
+                  ? 'bg-white text-zinc-900 shadow-xs font-semibold'
                   : 'text-zinc-500 hover:text-zinc-900'
               }`}
             >
@@ -385,38 +385,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
             </button>
           </div>
 
-          {/* 1-Click Fast Sandbox Demo Studio Banner */}
-          <div className="mb-6 p-4 rounded-xl bg-iris-50/50 border border-iris-100 relative overflow-hidden">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold tracking-wider text-iris-700 uppercase flex items-center space-x-1.5">
-                <Zap className="w-3.5 h-3.5 fill-current" />
-                <span>1-Click Sandbox Fast-Pass</span>
-              </span>
-              <span className="text-[10px] bg-white border border-iris-200 text-iris-700 font-mono px-2 py-0.5 rounded-full font-medium">
-                24h TTL
-              </span>
-            </div>
-            <p className="text-xs text-zinc-600 mb-3 leading-relaxed">
-              Test FrameFlow instantly with sample events. All uploaded media auto-purges in 24 hours.
-            </p>
-            <button
-              type="button"
-              onClick={handleDemoLogin}
-              disabled={demoLoading || loading}
-              className="w-full py-2.5 px-4 rounded-lg bg-iris-600 hover:bg-iris-700 active:bg-iris-800 text-white font-medium text-xs shadow-sm shadow-iris-600/20 transition flex items-center justify-center space-x-2 disabled:opacity-50"
-            >
-              <Zap className="w-3.5 h-3.5" />
-              <span>{demoLoading ? 'Spinning up Sandbox...' : '⚡ Launch 1-Click Demo Studio'}</span>
-            </button>
-          </div>
-
-          {/* Robust Google Sign-In Button */}
-          <div className="mb-6">
+          {/* Action Row: Google Auth & Demo Fast-Pass */}
+          <div className="space-y-2 mb-3">
+            {/* Robust Google Sign-In Button */}
             <button
               type="button"
               onClick={triggerGoogleAuth}
               disabled={googleLoading || loading}
-              className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-50 active:bg-zinc-100 text-zinc-800 font-medium text-xs transition flex items-center justify-center space-x-3 border border-zinc-300 shadow-sm disabled:opacity-50"
+              className="w-full py-2 px-3 rounded-xl bg-white hover:bg-zinc-50 active:bg-zinc-100 text-zinc-800 font-medium text-xs transition flex items-center justify-center space-x-2.5 border border-zinc-300 shadow-xs disabled:opacity-50"
             >
               <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                 <path
@@ -445,20 +421,38 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
               </span>
             </button>
 
-            <div className="relative my-5">
+            {/* 1-Click Fast Sandbox Demo Studio Banner */}
+            <div className="flex items-center justify-between p-2 rounded-lg bg-iris-50/70 border border-iris-100 text-xs">
+              <div className="flex items-center space-x-2">
+                <Zap className="w-3.5 h-3.5 text-iris-600 fill-current shrink-0" />
+                <span className="text-[11px] text-zinc-600 font-normal">
+                  Need a quick tour? (24h sandbox)
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={handleDemoLogin}
+                disabled={demoLoading || loading}
+                className="text-[11px] font-semibold text-iris-600 hover:text-iris-700 hover:underline px-1.5 py-0.5 rounded transition disabled:opacity-50"
+              >
+                {demoLoading ? 'Launching...' : '1-Click Demo →'}
+              </button>
+            </div>
+
+            <div className="relative py-1">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-zinc-200" />
               </div>
               <div className="relative flex justify-center text-[10px] uppercase font-semibold">
-                <span className="bg-[#FAFAFA] px-3 text-zinc-400">Or continue with email</span>
+                <span className="bg-[#FAFAFA] px-2.5 text-zinc-400">Or continue with email</span>
               </div>
             </div>
           </div>
 
           {/* Error Alert */}
           {error && (
-            <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start space-x-2.5 animate-fadeIn">
-              <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+            <div className="mb-3 p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start space-x-2 animate-fadeIn">
+              <AlertCircle className="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5" />
               <div className="flex-1">{error}</div>
               <button
                 type="button"
@@ -471,29 +465,29 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
           )}
 
           {/* Email / Password Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-2.5">
             {mode === 'REGISTER' && (
               <>
                 <div>
-                  <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] font-medium text-zinc-600 uppercase tracking-wider mb-1">
                     Your Full Name *
                   </label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
+                    <User className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-2.5" />
                     <input
                       type="text"
                       required
                       value={fullName}
                       onChange={handleFullNameChange}
                       placeholder="e.g. Rahul Sharma"
-                      className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-10 pr-3.5 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
+                      className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-9 pr-3 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-[11px] font-medium text-zinc-600 uppercase tracking-wider">
                       Studio / Brand Name *
                     </label>
                     {isStudioNameAuto && fullName.trim() && (
@@ -501,14 +495,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
                     )}
                   </div>
                   <div className="relative">
-                    <Building className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
+                    <Building className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-2.5" />
                     <input
                       type="text"
                       required
                       value={studioName}
                       onChange={handleStudioNameChange}
                       placeholder="e.g. Royal Weddings Studio"
-                      className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-10 pr-3.5 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
+                      className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-9 pr-3 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
                     />
                   </div>
                 </div>
@@ -516,8 +510,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
             )}
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider">
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-[11px] font-medium text-zinc-600 uppercase tracking-wider">
                   Email Address *
                 </label>
                 {mode === 'LOGIN' && (
@@ -526,49 +520,49 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
                     onClick={autofillDemo}
                     className="text-[10px] text-iris-600 hover:text-iris-700 hover:underline font-semibold"
                   >
-                    Use Demo Credentials
+                    Demo credentials
                   </button>
                 )}
               </div>
               <div className="relative">
-                <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
+                <Mail className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-2.5" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="photographer@frameflow.test"
-                  className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-10 pr-3.5 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
+                  className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-9 pr-3 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
                 />
               </div>
             </div>
 
             {mode === 'REGISTER' && (
               <div>
-                <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-medium text-zinc-600 uppercase tracking-wider mb-1">
                   Phone Number (Optional)
                 </label>
                 <div className="relative">
-                  <Phone className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
+                  <Phone className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-2.5" />
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-10 pr-3.5 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
+                    className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-9 pr-3 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-medium text-zinc-600 uppercase tracking-wider">
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-[11px] font-medium text-zinc-600 uppercase tracking-wider">
                   Password * {mode === 'REGISTER' && '(Min. 6 chars)'}
                 </label>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-zinc-400 absolute left-3.5 top-2.5" />
+                <Lock className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-2.5" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
@@ -576,15 +570,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-10 pr-10 py-2 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
+                  className="w-full bg-white border border-zinc-200 focus:border-iris-600 focus:ring-1 focus:ring-iris-600 rounded-lg pl-9 pr-9 py-1.5 text-xs text-zinc-900 placeholder-zinc-400 outline-none transition"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2 text-zinc-400 hover:text-zinc-600 transition"
+                  className="absolute right-2.5 top-2 text-zinc-400 hover:text-zinc-600 transition"
                   title={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
@@ -592,7 +586,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
             <button
               type="submit"
               disabled={loading || demoLoading}
-              className="w-full mt-2 py-2.5 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-medium text-xs transition flex items-center justify-center space-x-2 shadow-sm disabled:opacity-50"
+              className="w-full mt-1.5 py-2 px-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-medium text-xs transition flex items-center justify-center space-x-2 shadow-xs disabled:opacity-50"
             >
               <span>
                 {loading
@@ -608,7 +602,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
           </form>
 
           {/* Toggle mode footer */}
-          <div className="mt-6 text-center text-xs text-zinc-500">
+          <div className="mt-3 text-center text-xs text-zinc-500">
             {mode === 'LOGIN' ? (
               <p>
                 Don't have a studio portal yet?{' '}
@@ -636,7 +630,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
         </div>
 
         {/* Footer */}
-        <div className="pt-6 text-center text-[11px] text-zinc-400">
+        <div className="pt-2 text-center text-[10px] text-zinc-400">
           By signing in, you agree to FrameFlow's Terms of Service and Privacy Policy.
         </div>
       </div>
