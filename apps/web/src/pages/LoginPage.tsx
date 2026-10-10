@@ -67,6 +67,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
   // Google Dev Account Picker Modal
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [customGoogleEmail, setCustomGoogleEmail] = useState('');
+  const [savedClientId, setSavedClientId] = useState(
+    localStorage.getItem('frameflow_google_client_id') || ''
+  );
 
   // If already logged in, redirect to destination
   useEffect(() => {
@@ -149,7 +152,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
     setGoogleLoading(true);
 
     try {
-      const googleClientId = (window as any).VITE_GOOGLE_CLIENT_ID || (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID;
+      const googleClientId =
+        (window as any).VITE_GOOGLE_CLIENT_ID ||
+        (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID ||
+        localStorage.getItem('frameflow_google_client_id');
 
       // Check if real Google Client ID is configured and Google GIS is ready
       if (
@@ -668,9 +674,46 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
               </button>
             </div>
 
-            <p className="text-xs text-zinc-500 mt-3 mb-4">
-              Choose an account to continue to <strong>FrameFlow Studio</strong>:
-            </p>
+            <div className="mt-3 mb-4 p-3 rounded-xl bg-iris-50/60 border border-iris-100 text-[11px] text-zinc-600 leading-relaxed">
+              <span className="font-semibold text-iris-800 block mb-0.5">Live Google OAuth Setup:</span>
+              To open the genuine <strong>accounts.google.com</strong> popup, enter your Google Client ID below or add <code>VITE_GOOGLE_CLIENT_ID</code> to your <code>.env</code>.
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+                Your Google Client ID
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  value={savedClientId}
+                  onChange={(e) => setSavedClientId(e.target.value)}
+                  placeholder="e.g. 123456-abc.apps.googleusercontent.com"
+                  className="flex-1 px-3 py-1.5 text-xs bg-zinc-50 border border-zinc-200 rounded-lg outline-none focus:border-iris-600 font-mono text-[10px]"
+                />
+                <button
+                  type="button"
+                  disabled={!savedClientId.trim()}
+                  onClick={() => {
+                    localStorage.setItem('frameflow_google_client_id', savedClientId.trim());
+                    setShowGoogleModal(false);
+                    setTimeout(() => triggerGoogleAuth(), 100);
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-iris-600 hover:bg-iris-700 text-white text-xs font-medium disabled:opacity-40 transition whitespace-nowrap shadow-sm"
+                >
+                  Launch Popup
+                </button>
+              </div>
+            </div>
+
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-zinc-200" />
+              </div>
+              <div className="relative flex justify-center text-[10px] uppercase font-semibold">
+                <span className="bg-white px-2.5 text-zinc-400">Or test with 1-click account</span>
+              </div>
+            </div>
 
             <div className="space-y-2">
               {[
@@ -707,14 +750,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
 
             <div className="mt-4 pt-4 border-t border-zinc-100">
               <label className="block text-[11px] font-medium text-zinc-600 mb-1">
-                Or enter any Google account:
+                Or enter any Google email address:
               </label>
               <div className="flex items-center space-x-2">
                 <input
                   type="email"
                   value={customGoogleEmail}
                   onChange={(e) => setCustomGoogleEmail(e.target.value)}
-                  placeholder="name@gmail.com"
+                  placeholder="photographer@gmail.com"
                   className="flex-1 px-3 py-1.5 text-xs bg-zinc-50 border border-zinc-200 rounded-lg outline-none focus:border-iris-600"
                 />
                 <button
