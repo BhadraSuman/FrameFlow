@@ -127,7 +127,7 @@ export const LandingPage: React.FC = () => {
                   Sign In
                 </Link>
                 <Link
-                  to="/login"
+                  to="/signup"
                   className="px-4 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium shadow-sm transition"
                 >
                   Start Free
@@ -166,7 +166,7 @@ export const LandingPage: React.FC = () => {
           {/* CTA Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Link
-              to="/login"
+              to="/signup"
               className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-iris-600 hover:bg-iris-700 active:bg-iris-800 text-white font-medium text-sm shadow-md shadow-iris-600/25 transition flex items-center justify-center space-x-2"
             >
               <span>Create Free Studio</span>
@@ -632,7 +632,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <Link
-              to="/login"
+              to="/signup"
               className="mt-8 w-full py-2.5 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-semibold text-center transition block"
             >
               Get Started Free
@@ -674,7 +674,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <Link
-              to="/login"
+              to="/signup"
               className="mt-8 w-full py-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold text-center transition block"
             >
               Start Starter Plan
@@ -724,7 +724,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <Link
-              to="/login"
+              to="/signup"
               className="mt-8 w-full py-2.5 rounded-lg bg-iris-600 hover:bg-iris-700 active:bg-iris-800 text-white text-xs font-semibold text-center transition block shadow-sm shadow-iris-600/30"
             >
               Start Pro Studio
@@ -766,7 +766,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <Link
-              to="/login"
+              to="/signup"
               className="mt-8 w-full py-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold text-center transition block"
             >
               Start Studio Plan
@@ -841,7 +841,7 @@ export const LandingPage: React.FC = () => {
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              to="/login"
+              to="/signup"
               className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-iris-600 hover:bg-iris-700 text-white text-sm font-semibold shadow-md shadow-iris-600/30 transition flex items-center justify-center space-x-2"
             >
               <span>Get Started Free</span>

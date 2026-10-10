@@ -22,7 +22,8 @@ export default function App() {
           <div className="flex-1 flex flex-col">
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
+              <Route path="/login" element={<LoginPage initialMode="LOGIN" />} />
+              <Route path="/signup" element={<LoginPage initialMode="REGISTER" />} />
               <Route
                 path="/dashboard"
                 element={

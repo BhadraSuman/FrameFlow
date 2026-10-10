@@ -11,7 +11,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewEventClick }) => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const isClientView = location.pathname.startsWith('/gallery');
-  const isAuthView = location.pathname === '/login';
+  const isAuthView = location.pathname === '/login' || location.pathname === '/signup';
   const isLandingView = location.pathname === '/';
 
   if (isClientView || isAuthView || isLandingView) {
