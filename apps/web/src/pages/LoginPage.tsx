@@ -155,7 +155,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode }) => {
       const googleClientId =
         (window as any).VITE_GOOGLE_CLIENT_ID ||
         (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID ||
-        localStorage.getItem('frameflow_google_client_id');
+        localStorage.getItem('frameflow_google_client_id') ||
+        '992686297193-v3io9vu45num9lqdnfc6eglr9t1mlspc.apps.googleusercontent.com';
 
       // Check if real Google Client ID is configured and Google GIS is ready
       if (
