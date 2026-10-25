@@ -632,21 +632,32 @@ export const EventStudio: React.FC = () => {
               <span>CSV</span>
             </a>
 
+            {/* Plain TXT Filename List */}
+            <a
+              href={`/api/events/${event.id}/export/txt`}
+              download
+              className="px-4 py-2.5 rounded-lg bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium border border-zinc-200 transition shadow-xs flex items-center space-x-1.5"
+              title="Download clean plain text list for Lightroom import"
+            >
+              <Download className="w-4 h-4 text-zinc-400" />
+              <span>TXT</span>
+            </a>
+
             {/* Copy Lightroom Search Query */}
             <button
               onClick={copyLightroomQuery}
               className="px-4 py-2.5 rounded-lg bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium border border-zinc-200 transition shadow-xs flex items-center space-x-1.5"
-              title="Copy comma-separated filenames for Adobe Lightroom or Capture One search bar"
+              title="Copy comma-separated filenames for Adobe Lightroom Classic Library Filter"
             >
               {copiedKey === 'lightroom' ? (
                 <>
                   <CheckCircle className="w-4 h-4 text-emerald-600" />
-                  <span className="text-emerald-600">Query Copied!</span>
+                  <span className="text-emerald-600 font-semibold">Copied for Lightroom!</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4 text-zinc-400" />
-                  <span>Lightroom Query</span>
+                  <span>Copy Lightroom Query</span>
                 </>
               )}
             </button>

@@ -303,16 +303,58 @@ router.get('/:id/export/lightroom', async (req, res) => {
     const round = event.selectionRounds[0];
     const selections = round?.selections || [];
     const filenames = selections.map((s) => s.mediaItem.originalFilename);
+    const filenamesWithoutExt = filenames.map((name) => name.replace(/\.[^/.]+$/, ''));
+    
+    // Lightroom Classic uses comma separated or space separated names
     const query = filenames.join(', ');
+    const queryNoExt = filenamesWithoutExt.join(', ');
+    const textList = filenames.join('\r\n');
 
     res.json({
       query,
+      queryNoExt,
+      textList,
       count: filenames.length,
       filenames
     });
   } catch (error) {
     console.error('Error getting Lightroom query:', error);
     res.status(500).json({ error: 'Failed to generate Lightroom query' });
+  }
+});
+
+// GET /api/events/:id/export/txt - Plain text export for quick copy/paste into Lightroom search
+router.get('/:id/export/txt', async (req, res) => {
+  try {
+    const event = await prisma.event.findUnique({
+      where: { id: req.params.id },
+      include: {
+        selectionRounds: {
+          where: { roundNumber: 1 },
+          include: {
+            selections: {
+              include: { mediaItem: true }
+            }
+          }
+        }
+      }
+    });
+
+    if (!event) {
+      res.status(404).send('Event not found');
+      return;
+    }
+
+    const round = event.selectionRounds[0];
+    const selections = round?.selections || [];
+    const filenames = selections.map((s) => s.mediaItem.originalFilename);
+
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="selection-${event.slug}.txt"`);
+    res.send(filenames.join('\r\n'));
+  } catch (error) {
+    console.error('Error exporting TXT:', error);
+    res.status(500).send('Failed to generate TXT export');
   }
 });
 
